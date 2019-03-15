@@ -1,0 +1,37 @@
+	
+	for in:
+		一般用于遍历对象的属性；
+		作用于数组的for in除了会遍历数组元素外，还会遍历自定义可枚举的属性，以及原型链上可枚举的属性；(不含Symbol属性）
+		作用于数组的for in的遍历结果是数组的索引，且都为字符串型，不能用于运算；
+		随机顺序遍历元素；
+
+
+	Object.keys():
+		遍历结果为由对象自身可枚举属性组成的数组;(不含Symbol属性）
+		数组中的属性名排列顺序与使用for in循环遍历该对象时返回的顺序一致；
+		与for in区别在于不能遍历出原型链上的属性；
+
+	
+	for of:
+		ES6中添加的循环语法；
+		支持遍历数组、类对象（例如DOM NodeList对象）、字符串、Map对象、Set对象；(不含Symbol属性）
+		不支持遍历普通对象，可通过与Object.keys()搭配使用遍历；(支持遍历迭代器对象(有Symbol.iterator方法))
+		遍历后的输出结果为数组元素的值；
+		搭配实例方法entries()，同时输出数组内容和索引:
+				let arr3 = ['a', 'b', 'c'];
+			    for (let [index, val] of arr3.entries()) {
+				    console.log(index + ':' + val);//0:a 1:b 2:c
+				}
+		让某个对象支持for of 方法,比如jquery对象：
+			jQuery.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+
+	
+	Object.getOwnPropertyNames():
+		返回由 自身 所有属性组成的数组，不包括原型；(包含 enumerable：false 的属性)(不含Symbol属性）
+
+
+	Object.getOwnPropertySymbols():
+		返回由 自身 所有 Symbol 属性组成的数组，不包括原型；(全是自身的Symbol属性)
+
+
+		
