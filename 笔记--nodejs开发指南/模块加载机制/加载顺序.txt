@@ -1,0 +1,14 @@
+
+    require(some_module) 时的加载顺序：
+
+        1、如果 some_module 是一个核心模块，直接加载，结束
+
+        2、如果 some_module 以 '/'、 './'、 '../' 开头，按路径加载 some_module，结束
+
+        3、设当前目录为 dir，按路径加载 dir/node_modules/some_module。
+
+            如果加载成功，结束。
+
+            如果加载失败， 令 dir 为其父目录
+
+            重复这一过程，直到遇到根目录，抛出异常，结束

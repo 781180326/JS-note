@@ -1,0 +1,47 @@
+{
+	"name": "mypackage 包名",
+	"description": "这里是包的简介。。。",
+	"version": "0.7.0 包的版本",
+	"keywords": [
+		"package 关键字1",
+		"example 关键字2"
+	],
+	"maintainers": [
+		{
+			"name": "bwhite 维护者1名字",
+			"email": "bwhite@qq.com 维护者email"
+		}	
+	],
+	"contributors": [
+		{
+			"name": "bwhite 贡献者1名字",
+			"web": "bwhite.com 贡献者1网址",
+			"email": "bwhite@qq.com 贡献者email"
+		}
+	],
+	"bugs": {
+		"email": "bwhite@qq.com 提交bug的email",
+		"web": "bwhite.com 提交bug的网址""
+	},
+	"licenses": [
+		{
+			"type": "GPLv2 许可证1名称",
+			"url": "http://www.bwhite.com/licenses/gpl.html 许可证1地址"
+		}
+	],
+	"repositories": [
+		{
+			"type": "git 仓库1类型",
+			"url": "http://github.com/bwhite/mypackage.git 仓库1地址"
+		}
+	],
+	"dependencies": {
+		"webkit": "1.2 dependencies中是包的依赖，由包名和版本号组成",
+		"ssl": {
+			"gnutls": ["1.0","2.0"],
+			"openssl": "0.9.8"
+		}
+	},
+	"main": "./lib/interface.js"
+}
+

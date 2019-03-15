@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>数据结构——链</title>
+	<meta charset="utf-8">
+	<script>
+
+	//单向链表
+	/*function Node(element){
+		this.element = element;
+		this.next = null;
+	}
+	function LinkedList(){
+		this.head = new Node("head");
+		this.find = find;
+		this.insert = insert;
+		this.findPrevious = findPrevious;
+		this.remove = remove;
+		this.display = display;
+	}
+	function find( item ){
+		var currNode = this.head;
+		while( currNode.element != item ){
+			currNode = currNode.next;
+		}
+		return currNode;
+	}
+	function insert( newElement , item ){
+		var newNode = new Node(newElement);
+		var current = this.find( item );
+		newNode.next = current.next;
+		current.next = newNode; 
+	}
+	function display(){
+		var current = this.head;
+		while( !(current.next == null) ){
+			console.log( current.next.element );
+			current = current.next;
+		}
+	}
+	function findPrevious( item ){
+		var current = this.head;
+		while( !(current.next == null) && (current.next.element != item) ){
+			current = current.next;
+		}
+		return current.next == null ? false : current;
+	}
+	function remove( item ){
+		var prevNode = this.findPrevious(item);
+		var nextNode = this.find(item).next;
+		if( prevNode ){
+			prevNode.next.next = null;
+			prevNode.next = nextNode;
+		}
+	}
+
+	var cities = new LinkedList();
+	cities.insert("baibin","head");
+	cities.insert("baibin2","baibin");
+	cities.insert("baibin3","baibin2");
+	cities.display();
+	cities.remove("baibin2");
+	cities.display();*/
+
+
+
+
+
+
+	//双向链表
+	/*function Node(element){
+		this.element = element;
+		this.next = null;
+		this.prev = null;
+	}
+	function LinkedList(){
+		this.head = new Node("head");
+		this.nowNode = this.head;
+		this.show = show;
+		this.advance = advance;
+		this.back = back;
+		this.find = find;
+		this.insert = insert;
+		this.remove = remove;
+		this.display = display;
+		this.findLast = findLast;
+		this.dispReverse = dispReverse;
+	}
+	function show(){
+		console.log(this.nowNode.element);
+	}
+	function back( n ){
+		if(n>-1){
+			while( n != 0 ){
+				if( !(this.nowNode.next == null) ){
+					this.nowNode = this.nowNode.next;
+					--n;
+				}
+				
+			}
+		}
+	}
+	function advance( n ){
+		if(n>-1){
+			while( n != 0 ){
+				if( !(this.nowNode.prev == null) ){
+					this.nowNode = this.nowNode.prev;
+					--n;
+				}
+				
+			}
+		}
+	}
+	function find( item ){
+		var currNode = this.head;
+		while( currNode.element != item ){
+			currNode = currNode.next;
+		}
+		return currNode == null ? false : currNode;
+	}
+	function insert( newElement , item ){
+		var newNode = new Node(newElement);
+		var current = this.find( item );
+		newNode.next = current.next;
+		newNode.prev = current;
+		current.next = newNode; 
+	}
+	function display(){
+		var current = this.head;
+		while( !(current.next == null) ){
+			console.log( current.next.element );
+			current = current.next;
+		}
+	}
+	function remove( item ){
+		var current = this.find(item);
+		if( current && current.next != null ){
+			current.prev.next = current.next;
+			current.next.prev = current.prev;
+			current.next = null;
+			current.prev = null;
+		}else if(current.next == null){
+			current.prev.next = current.next;
+			current.prev = null;
+		}
+	}
+	function findLast(){
+		var current = this.head;
+		while( !(current.next == null) ){
+			current = current.next;
+		}
+		return current;
+	}
+	function dispReverse(){
+		var lastNode = this.findLast();
+		while( !(lastNode.prev == null) ){
+			console.log(lastNode.element);
+			lastNode = lastNode.prev;
+		}
+	}
+
+	var cities = new LinkedList();
+	cities.insert("baibin","head");
+	cities.insert("baibin2","baibin");
+	cities.insert("baibin3","baibin2");
+	cities.display();
+	cities.dispReverse();
+	cities.remove("baibin3");
+	cities.display();
+	cities.dispReverse();
+
+	cities.insert("baibin","head");
+	cities.insert("baibin2","baibin");
+	cities.insert("baibin3","baibin2");
+	cities.insert("baibin","head");
+	cities.insert("baibin2","baibin");
+	cities.insert("baibin3","baibin2");
+
+	cities.show();
+	cities.back(5);
+	cities.show();*/
+
+
+	//循环链表
+	function Node(element){
+		this.element = element;
+		this.next = null;
+	}
+	function LList(){
+		this.head = new Node("head");
+		this.head.next = this.head;
+		this.find = find;
+		this.insert = insert;
+		this.remove = remove;
+		this.display = display;
+		this.findPrevious = findPrevious;
+	}
+		
+	
+	function find( item ){
+		var current = this.head;
+		while( !(current.next == head) && !(current.next == item) ){
+			current = current.next;
+		}
+		return current.next == this.head ? false : current;
+
+	}
+	function display(){
+		var current = this.head;
+		while( !(current.next == this.head) && !(current.next == null) ){
+			console.log(current.element);
+			current = current.next;
+		}
+	}
+	</script>
+</head>
+<body>
+
+</body>
+</html>

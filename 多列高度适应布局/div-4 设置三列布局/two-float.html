@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" \>
+	<title>三列布局双列自适应</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding:0;
+		}
+		body{
+			text-align: center;
+			/*width:960px;*/
+			margin:0 50px;
+		}
+		.header,.footer{
+			height:30px;
+			line-height: 30px;
+			margin:0 auto;
+			color:#FFF;
+			background-color:#AAA;
+		}
+		.container{
+			color:#FFF;
+			margin:10px auto;
+			overflow: hidden;
+		}
+		.mainBox{
+			float:left;
+			width:100%;
+			max-width: 100%;
+			background-color:#FFF;
+		}
+		.mainBox .Content{
+			margin:0 41% 0 210px;
+			background-color:#000;
+			height:300px;
+		}
+		.sideMainBox{/*在mainBox设置为float以后，因为它本身占100%的宽度，所以后面的所有容器按道理都要换行，这个距离是在上一个容器占了100%后，紧跟着在右边放置这个容器，但是没有这个空间了，所以本来它应该是在下一层的，但是这里的宽度设置为向左40%的距离，而且他的自身宽度也是40%，空出来的距离刚好能够容纳这个容器，所以它就呈现在这一层的最右边，而且宽度自适应*/
+			float:left;
+			width:40%;
+			margin-left:-40%;
+			background-color:#666;
+			height:300px;
+		}
+		.sideBox{/*和上面一样，不够这个容器设置向左是100%，所以显示在当前行的最左边，而且宽度固定*/
+			float:left;
+			width:200px;
+			margin-left:-100%;
+			background-color:#666;
+			height:300px;
+		}
+
+
+
+	</style>
+</head>
+<body>
+	<div class="header"></div>
+	<div class="container">
+
+		<div class="mainBox">
+			<div class="Content"></div>
+		</div>
+		<div class="sideMainBox"></div>
+		<div class="sideBox"></div>
+
+	</div>
+	<div class="footer"></div>
+
+
+</body>
+</html>

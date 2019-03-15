@@ -1,0 +1,266 @@
+在拥有许多网页的网站中，有些javascript代码是所有网页都要用到的，他们通常被存放在独立的文件中，有些代码是某个网页专用的，不会被用到其他地方，最好把这两种代码分别包装在自己的单体对象中。
+
+		用来包装各个网页专用的代码的单体看起来都差不多。它需要封装一些数据（也许是作为常量）、各个网页特有行为定义一些方法以及定义初始化方法。设计DOM中特有元素的大多数代码，比如添加事件监听的代码，只有在这些元素完成后才能工作。你可以通过创建一个init方法并将其关联到窗口的load事件。
+
+		比如：
+			Namespace.PageName = {
+				CONSTANT_1: true,
+				CONSTANT_2: 10,
+				
+				method1: function(){
+				},
+				method2: function(){
+				},
+				
+				init: function(){
+				}
+			
+			}
+			
+			window.onload = Namespace.init;
+			window.DOMContentLoaded = Namespace.init;
+			window.DOMLoaded = Namespace.init;
+			
+			我们用WEB开发中很常见的任务为例示范它的用法。
+			
+			var GiantCorp = window.GiantCorp || {};
+			GiantCorp.RegPage = {
+				
+				//Constants  这里是自己确定的表单id和发送结果接受对象。
+				FROM_ID: 'reg-from';
+				OUTPUT_ID: 'reg-results';
+				
+				//From handling methods
+				handleSubmit: function( e ){
+				
+					e.preventDefault();//阻止默认事件（表单的submit）
+					
+					var data = {};
+					//获取表单中的数据标签
+					var input = GiantCorp.RegPage.formEl.getElementsByTagName('input');
+					
+					//将数据项以 name:值 的方式存在data对象中。
+					for( var i = 0, len = input.length; i <len; i++){
+						data[ inputs[i].name ] = input[i].value;
+					}
+					
+					GiantCorp.RegPage.sendRegistration( data );
+				},
+				sendRegistration: function( data ) {
+					//使用ajax发送给某个地址
+					//返回结果数据response
+					
+					displayResult( response );
+				},
+				displayResult: function( response ) {
+					//对结果进行处理
+					//将结果输出到接受对象
+					GiantCorp.RegPage.outputEl.innerHTML = response;
+				},
+				
+				init: function(){
+					//根据id获取表单和接受对象
+					GiantCorp.RegPage.formEl = $( GiantCorp.RegPage.FROM_ID );
+					GiantCorp.RegPage.outputEl = $( GiantCorp.RegPage.OUTPUT_ID );
+					
+					//对象表单对象添加handleSubmit事件
+					addEvent( GiantCorp.RegPage.formEl, 'submit', GiantCorp.RegPage.handleSubmit);
+				}
+			}
+			
+			addLoadEvent( GiantCorp.RegPage.init );
+			
+			
+		拥有私有成员的单体：
+			1、用下划线表示法：
+						GiantCorp.DataParser = {
+							//私有方法
+							_stripWhitespace: function( str ){
+								return  str.replace( /\s+/, '' );
+							},
+							_stringSplit: function( str, delimiter ){
+								return str.split( delimiter );
+							},
+							
+							//公用方法
+							stringToArray: function( str, delimiter, stripWS ){
+								//是否要删除字符串中的空白
+								if( stripWS ) {
+									str = this._stripWhitespace(str);
+								}
+								var outputArray = this._stringSplit( str, delimiter );
+								return outputArray;
+							}
+						};
+						
+					这种方法有很多缺陷：
+						私有方法还是可能会被修改，而且当在其他地方调用这个公用方法时，this的指向不一定依旧是GiantCorp.DataParser，所以在调用的时候要用GiantCorp.DataParser来调用，不要用this
+						
+			2、使用闭包（更好的方法）
+						GiantCorp.DataParser = (
+							function(){
+								//私有属性
+								var whitespaceRegex = /\s+/;
+								
+								//私有方法
+								function stripWhitespace( str ){
+									return  str.replace( whitespaceRegex '' );
+								}
+								function stringSplit( str, delimiter ){
+									return str.split( delimiter );
+								}
+								
+								//返回单体对象
+								return {
+									//单体对象中的特权方法
+									function stringToArray( str, delimiter, stripWS ){
+										if( stripWS ) {
+											str = this._stripWhitespace(str);
+										}
+										var outputArray = this._stringSplit( str, delimiter );
+										return outputArray;
+								}
+							} )();
+							
+		惰性实例化：
+					前面的那些单体对象都有一个共同点：在脚本加载时被创建出来。
+					对于资源密集型的或者配置开销甚大的单体，也许更合理的做法是将其实例化推迟到需要用它的时候，这种技术被称为惰性加载。他最常用于那些必须加载大量数据的单体，而那些被用做命名空间、特定网页专用代码包装器或组织相关实用方法的工具最好还是立即实例化。
+					
+					MyNameSpace.singleton = (function(){
+						
+						//用来判断是否实例化以及存储实例化对象的变量
+						var uniqueInstance;
+						
+						function constructor(){
+								//私有数据
+								var privateAttribute1 = false;
+								var privateAttribute2 = [1, 2, 3];
+								
+								function privateMethod1(){
+									...
+								}
+								function privateMethod2(){
+									...
+								}
+								
+								return {   //在需要时被创建的单体对象
+									//公用数据
+									publicAttribute1 : true,
+									publicAttribute2 : 10,
+									
+									publicMethod1: function(){
+										...
+									},
+									publicMethod2: function(){
+										...
+									}
+								}	
+						}
+						
+						return {
+							//当已经调用了consturctor方法实例化了一个对象的时候，直接返回这个对象，否则运行这个函数创建单体并返回。
+							getInstance: function(){
+								if( !uniqueInstance ){
+										uniqueInstance = consturctor();
+								}
+								return uniqueInstance;
+							}
+						}
+						
+					})();
+					
+		分支：
+			使用分支来创建XHR对象
+				var SimpleXhrFactory = (function(){
+					var standard = {
+						createXhrObject : function() {
+							return new XMLHttpRequest();
+						}
+					};
+					var activeXNew = {
+						createXhrObject : function() {
+							return new ActiveXObject( 'Msxml2.XMLHTTP' );
+						}
+					};
+					var activeXOld = {
+						 createXhrObject : function() {
+							return new ActiveXObject( 'Microsoft.XMLHTTP' );
+						 }
+					};
+					
+					//测试对象
+					var testObject;
+					
+					
+					try {
+						testObject = standard.createXhrObject();
+						return standard;
+					} catch( e ){
+						try {
+							testObject = activeXNew.createXhrObject();
+							return activeXNew;
+						} catch( e ){
+							try {
+								testObject = activeXOld.createXhrObject();
+								return activeXOld;
+							} catch( e ){
+								throw new Error("No XHR object found in this enviroment");
+							}
+						}
+					}
+				})();
+				这个分支只需要在页面执行一次就会返回适合当前浏览器的xhr对象，
+				多次用到XHR对象的时候不用再次判断浏览器类型，因为已经返回了当前浏览器的创建方法。
+				
+				使用这个分支：
+				var xhr = SimpleXhrFactory.createXhrObject();
+				
+				分支适用于任何只有在运行时才能确定具体实现的情况。
+				比如：鼠标滚轮方法、获取屏幕滚动高度、获取元素属性值等等
+				比如获取元素属性：
+				 var getStyle = (function(){
+						
+						//标准
+						function getCom( obj,attr ){
+							if( attr == 'float' ){
+								return  obj.style.cssFloat;
+							}
+							return getComputedStyle(obj, false)[attr];
+						}
+						
+						//ie
+						function  getCur( obj, attr){
+							if( attr == 'float' ){
+								return  obj.style.styleFloat;
+							}
+							return obj.currentStyle[attr];
+						}
+						
+						if(windw.getComputerStyle){
+							return getCom;
+						}else{
+							return getCur;
+						}
+				 })();
+				
+				
+	单体模式之利：
+		主要好处在于它对代码的组织作用。
+		把相关方法和属性组织在一个不会被多次实例化的单体中，可以使代码维护更轻松。
+		描述性的命名空间可以增强代码的自我说明性。
+		把代码包裹在单体中，可以防止它们被其他程序员误改。
+		可以防止全局命名空间被一大堆变量弄得一团糟。
+		可以使你的代码和第三方的代码隔离
+		惰性实例化可以直到需要一个对象的时候才创建它，减少那些不需要它的用户承受的不必要的内存消耗。
+		分支可以用来创建高效的方法。
+		
+	单体模式之弊：
+		单体模式提供的是一种单点访问，所以有可能导致模块间的强耦合。
+		（有时候创建一个可实例化的类更为可取，你需要判断是否需要创建一个单体出来。）
+		
+		不利于单元测试。
+		（单体最好还是留给定义命名空间和实现分支型方法这些用途。）
+			
+			
+
+			

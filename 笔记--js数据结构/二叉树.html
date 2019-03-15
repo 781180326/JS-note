@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>二叉树</title>
+	<meta charset="utf-8">
+	<script>
+	function Node(data,left,right){   //二叉树结点定义
+		this.data = data;
+		this.left = left;
+		this.right = right;
+	}
+	Node.prototype.show = function() {
+		return this.data;
+	};
+	
+	function BST(){ //二叉树定义
+		this.root = null;
+	}
+
+	//移除某个值为data的节点
+	BST.prototype.remove = function remove(data){
+		this.root = this.removeNode(this.root,data);
+	}
+	//删除节点的核心操作，以递归调用，node:待操作部分的顶级节点，data：要删除的节点的值。最终返回 删除节点值为data后的node节点
+	BST.prototype.removeNode = function removeNode(node,data){
+		if(node === null){
+			return null;
+		}
+		if( data === node.data ){
+			//没有子节点的节点
+			if( node.left === null && node.right === null ){
+				return null;
+			}
+
+			//没有左子节点的节点
+			if( node.left === null ){
+				return node.right;
+			}
+
+			//没有右子节点的节点
+			if( node.right === null ){
+				return node.left;
+			}
+
+			//有两个子节点的节点,原理：将此节点的右节点中的最小值剪切到此节点，或者将左节点中的最大值剪切到此节点，这里选择前一种
+			var tempNodeData = getmin(node.right);
+			node.data = tempNodeData;
+			node.right = removeNode(node.right, tempNodeData);
+			return node;
+		}else if( node.data >data ){
+			node.left = removeNode(node.left, data);
+			return node;
+		}else{
+			node.right = removeNode(node.right, data);
+			return node;
+		}
+	}
+
+
+	//查找值为data的节点
+	BST.prototype.find = function find(data){
+		var current = this.root;
+		while( current !== null){
+			if( current.data === data ){
+				return current;
+			}else if( current.data < data ){
+				current = current.left;
+			}else{
+				current = current.right;
+			}
+		}
+
+		return null;
+	}
+
+	//插入节点
+	BST.prototype.insert = function insert(data){
+		var n = new Node(data,null,null);
+
+		if( this.root === null ){
+			this.root = n;
+		}else{
+			var current = this.root;
+			var parent;
+			while(true){
+				parent = current;
+				if(data < current.data){
+					current = current.left;
+					if(current == null){
+						parent.left = n;
+						break;
+					}
+				}else{
+					current = current.right;
+					if(current == null){
+						parent.right = n;
+						break;
+					}
+				}
+			}
+		}
+	}
+	//获取顶级节点为node的最小值
+	BST.prototype.getmin = function getmin(node){
+		var current = node;
+		while( !(current.left === null) ){
+			current = current.left;
+		}
+		return current.show();
+	}
+	//获取顶级节点为node的最大值
+	BST.prototype.getmax = function getmin(node){
+		var current = node;
+		while( !(current.right === null) ){
+			current = current.right;
+		}
+		return current.show();
+	}
+	//中序排序输出
+	BST.prototype.inOrder = function inOrder(node){
+		if(!(node===null)){
+			inOrder(node.left);
+			console.log(node.show());
+			inOrder(node.right);
+		}
+	}
+	//先序排序输出
+	BST.prototype.preOrder = function preOrder(node){
+		if(!(node===null)){
+			console.log(node.show());
+			preOrder(node.left);
+			preOrder(node.right);
+		}
+	}
+	//后序排序输出
+	BST.prototype.postOrder = function postOrder(node){
+		if(!(node===null)){
+			postOrder(node.left);
+			postOrder(node.right);
+			console.log(node.show());
+		}
+	}
+
+
+
+	//实验操作部分
+	var bst1 = new BST();
+
+	for(var i = 0; i < 20; i++ ){
+		bst1.insert(Math.floor(Math.random()*100));
+	}
+
+	bst1.inOrder(bst1.root);
+	console.log("--------------------------------<hr/>");
+
+	bst1.preOrder(bst1.root);
+	console.log("--------------------------------<hr/>");
+
+	bst1.postOrder(bst1.root);
+	console.log("--------------------------------<hr/>");
+
+	console.log(bst1.getmin(bst1.root));
+	console.log("--------------------------------<hr/>");
+
+	console.log(bst1.getmax(bst1.root));
+	console.log("--------------------------------<hr/>");
+	
+	bst1.remove(bst1.getmin(bst1.root));//移除最小值
+	console.log(bst1.getmin(bst1.root));
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>

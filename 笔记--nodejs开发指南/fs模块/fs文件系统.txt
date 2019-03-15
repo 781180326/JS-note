@@ -1,0 +1,238 @@
+
+    fs模块是文件操作的封装。
+
+    提供了文件的 读取、写入、更名、删除、遍历目录、链接等 POSIX文件系统操作。
+
+    fs模块中的所有操作都提供了异步和同步的两个版本。
+
+    fs中所有的同步操作都是在其异步操作函数名称加上 Sync 同步字符串
+
+1、fs.readFile
+
+    fs.readFile( filename, [encoding], [callback( err, data )] );
+
+        异步读取文件内容。 最简单的读取文件的函数。
+
+        filename ： 必选，要读取的文件名
+        encoding ： 可选，文件的字符编码，如果指定encoding，data是一个解析后的字符串，如果不指定，data会是以Buffer形式表示的二进制数据
+        callback ： 可选，回调函数，提供两个参数err和data，err表示有没有错误发生，data是文件内容。当读取文件出错时，err将会是Error对象。
+
+    eg:
+        var fs = require('fs');
+        fs.readFile('file.txt', 'utf-8', function(err, data) {
+        	if(err) console.log(err);
+        	else console.log(data);
+        });
+        //hello, this is a txt
+
+
+        fs.readFile('file.txt', function(err, data) {
+        	if(err) console.log(err);
+        	else console.log(data);
+        });
+        //<Buffer 68 65 6c 6c 6f 2c 20 74 68 69 73 20 69 73 20 61 20 74 78 74 0a>
+
+        fs.readFile('nosearch.txt', 'utf-8', function(err, data) {
+        	if(err) console.log(err);
+        	else console.log(data);
+        });
+        //{ [Error: ENOENT: no such file or directory, open 'f阿斯顿e.txt'] errno: -2, code: 'ENOENT', syscall: 'open', path: 'nosearch.txt' }
+
+2、fs.readFileSync
+
+    fs.readFileSync( filename, [encoding]);
+
+        readFile()的同步版本。
+
+        接受的参数与readFile()相同，却没有回调函数。
+
+        读取到的文件内容会以函数返回值的形式返回。
+
+        如果有错误，fs会抛出异常，需要使用 try 、catch捕捉并处理异常。
+
+    eg:
+        var data = fs.readFileSync('fila.txt', 'utf-8');
+        console.log(data);
+        //hello, this is a txt
+
+        try {
+            var data = fs.readFileSync('nosearch.txt', 'utf-8');
+        } catch (e) {
+            console.log(e);
+            console.log(data);
+        }
+        /* { Error: ENOENT: no such file or directory, open 'fila.txt'
+            at Object.fs.openSync (fs.js:577:3)
+            at Object.fs.readFileSync (fs.js:483:33)
+            at Object.<anonymous> (/home/bwhite/Desktop/node-dome/同步异步读取文件.js:22:16)
+            at Module._compile (internal/modules/cjs/loader.js:702:30)
+            at Object.Module._extensions..js (internal/modules/cjs/loader.js:713:10)
+            at Module.load (internal/modules/cjs/loader.js:612:32)
+            at tryModuleLoad (internal/modules/cjs/loader.js:551:12)
+            at Function.Module._load (internal/modules/cjs/loader.js:543:3)
+            at Function.Module.runMain (internal/modules/cjs/loader.js:744:10)
+            at startup (internal/bootstrap/node.js:238:19) errno: -2, syscall: 'open', code: 'ENOENT', path: 'fila.txt' }
+
+            hello, this is a txt
+        */
+
+3、fs.open
+
+    fs.open( path, flags, [mode], [callback(err, fd)] );
+
+        打开文件。与C语言标准库中的fopen函数类似。异步。
+
+        path  :  必选，文件路机
+
+        flags :  必选，文件的打开模式
+            r ： 读取模式
+            r+： 读写模式
+            w ： 写入模式，如果文件不存在则创建
+            w+： 读写模式，如果文件不存在则创建
+            a ： 追加模式，如果文件不存在则创建
+            a+： 读取追加模式，如果文件不存在则创建
+
+        mode  ： 可选，创建文件时，给文件指定权限，默认是0666
+            关于文件权限，参考 ./文件目录权限.txt
+
+        callback：可选，回调函数，fd为文件描述符
+            文件描述符：非负整数，表示操作系统内核为当前进程所维护的打开文件的记录表索引。
+
+    此函数只能创建文件，无法创建目录！
+    eg:
+        fs.open('../../pictire', 'w+', '0775', (err, fd)=>console.log(fd));
+        //12
+
+4、fs.read
+
+    fs.read( fd, buffer, offset, length, position, [callback(err, bytesRead, buffer)] );
+
+        读取文件，相比readFile提供了更底层的接口。异步。
+
+        从指定的文件描述符 fd 中读取数据并写入buffer 指向的缓冲区对象。
+
+        fd : 必选，文件描述符
+        buffer ： 必选，写入的缓冲区对象
+        offset ： 必选，buffer的写入偏移量
+        length ： 必选，从文件中读取的字节数
+        position：必选，文件读取的起始位置，如果值为null，则从当前指针的位置读取
+        callback：可选，传递bytesRead和buffer，表示读取的字节数、缓冲区对象
+
+    一般情况下，除非必要，否则不要使用这种方式读取文件，因为它要求你手动管理缓冲区和文件指针，尤其是在不知道文件大小的时候，这将会是一件很麻烦的事。
+
+    eg: //异步的，因此在回调函数内部
+
+        fs.open('../../pictire', 'w+', '0775', (err, fd)=>{
+            var buffer = new Buffer.alloc(8);
+            //由于安全性和可用性问题，Buffer被弃用。使用Buffer.alloc。
+            fs.read( fd, buffer, 0, 8, null,(err, bytesRead, buffer)=>{
+                if (err) {
+                    console.error(err);
+                }
+                console.log(bytesRead);
+                console.log(buffer);;
+            } )
+        });
+
+5、常用文件系统函数
+
+    (1) 异步读取文件内容
+    fs.readFile(filename,[encoding],[callback(err, data)])
+
+    (2) 异步写入文件内容,覆盖
+    fs.writeFile(filename, data, [encoding], [callback(err)])
+
+        异步追加文件内容
+    fs.appendFile(filename, data, [encoding], [callback(err)]);
+
+    这两个方法都可以新建文件.但是不可以建立目录，也不能将文件建立在一个不存在的目录下，会报错。
+
+    (3) 异步删除文件
+    fs.unlink( path, [callback(err)] )
+
+    (4) 异步创建目录
+    fs.mkdir( path, [mode], [callback(err)] )
+
+    (5) 异步删除目录 ；；只能删除空的文件夹
+    fs.rmdir(path, [callback(err)] )
+
+        删除目录下所有文件：
+        function removeDir(src) {
+
+            var arr = fs.readdirSync(src);
+
+            for(var i = 0 ; i< arr.length ;i++){
+
+                var url = src+"/"+arr[i];
+                var data = fs.statSync(url);
+
+                if(data.isFile()){
+                    fs.unlinkSync(url);
+                }else{
+                    removeDir(url);     //递归
+                }
+            }
+
+            fs.rmdirSync(src);
+         }
+
+    (6) 异步读取目录
+    fs.readdir( path, [callback(err, files)] )
+
+    (7) 异步获取真实路径
+    fs.realpath( path, [callback(err, resolvedPath)] )
+
+    (8) 异步更名
+    fs.rename( path1, path2, [callback(err)] )
+
+    (9) 异步截断
+    fs.truncate( fd, len, [callback(err)] )
+
+    (10)异步更改所有权
+    fs.chown( path, uid, gid, [callback(err)])   //u:所有者 g：同组其他人
+
+    (11)异步更改权限
+    fs.chmod( path, mode, [callback(err)] )
+
+    (12)异步修改文件时间戳
+    fs.utimes( path, atime, mtime, [callback(err)] )
+
+    (13)异步同步磁盘缓存
+    fs.fsync( fd, [callback(err)] )
+
+    (14)异步判断文件夹是否存在
+    fs.exists( path,[callback(exists)] );
+        if(exists) => 文件夹已存在
+
+    (15)异步显示文件的详细信息，针对详细信息判断是文件夹还是文件
+    fs.stat( path, [callback(err, data)] )
+        data是文件的详细信息
+        data.isFile()       //是否是文件
+        data.isDirectory()  //是否是文件夹
+
+        data详细信息:
+            Stats {
+              dev: 2049,
+              mode: 16893,
+              nlink: 2,
+              uid: 1000,
+              gid: 1000,
+              rdev: 0,
+              blksize: 4096,
+              ino: 660239,
+              size: 4096,
+              blocks: 8,
+              atimeMs: 1534729259584.3176,
+              mtimeMs: 1534729259584.3176,
+              ctimeMs: 1534729259584.3176,
+              birthtimeMs: 1534729259584.3176,
+              atime: 2018-08-20T01:40:59.584Z,
+              mtime: 2018-08-20T01:40:59.584Z,
+              ctime: 2018-08-20T01:40:59.584Z,
+              birthtime: 2018-08-20T01:40:59.584Z }
+
+
+
+
+
+    https://www.jianshu.com/p/482a2d272a21?utm_source=oschina-app

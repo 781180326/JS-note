@@ -1,0 +1,24 @@
+#! /bin/sh
+NODE_ENV = production
+DAEMON = "node /home/bwhite/Desktop/node-dome/nodejs实战/microblog/bin/cluster.js"
+NAME=Microblog
+DESC=Microblog
+PIDFILE="/home/bwhite/Desktop/node-dome/nodejs实战/microblog/bin/microblog.pid"
+
+case "$1" in
+    start)
+        echo "Starting $DESC:"
+            nohup $DAEMON > /dev/null &
+        echo $! > $PIDFILE
+        echo "$NAME."
+            ;;
+    stop)
+        echo "Stopping $DESC: "
+            pid = 'cat $PIDFILE'
+        kill $pid
+            rm $PIDFILE
+        echo "$NAME."
+            ;;
+esac
+
+exit 0

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		.wrap{
+			width: 300px;
+			height: 100px;
+			padding: 12px;
+			border: 1px solid #933;
+		}
+		.user, .pass{
+			position: relative;
+			height: 46px;
+			padding-left: 48px;
+			border: 1px solid #d9d9d9;
+			border-radius: 3px;
+		}
+		.user{
+			margin-bottom: 8px;
+			background: url('./image/user.png') 0 0 no-repeat;
+		}
+		.pass{
+			background: url('./image/pass.png') 0 0 no-repeat;
+		}
+		.wrap label, .wrap input{
+			position: absolute;
+			top: 0;
+			left: 48px;
+		}
+		.wrap label{
+			z-index: 1;
+			width: 250px;
+			height: 100%;
+			line-height: 46px;
+			color: #666;
+			cursor: text;
+		}
+		.wrap input{
+			width: 250px;
+			height: 100%;
+			border: none;
+			background: transparent;
+			line-height: 46;
+			outline: none;
+		}
+	</style>
+</head>
+<body>
+	<form class="wrap" action="" method="post">
+		<div class="user">
+			<label id="userLabel" for="username">请输入用户名:</label>
+			<input id="username" type="text" name="" value="">
+		</div>
+		<div class="pass">
+			<label id="passLabel" for="password">请输入密码:</label>
+			<input id="password" type="password" name="" value="">
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		var userText = document.getElementById('username');
+		var userLabel = document.getElementById('userLabel');
+		var passText = document.getElementById('password');
+		var passLabel = document.getElementById('passLabel');
+
+		userText.onkeyup = function(){
+			changeLabel(this, userLabel);
+		}
+
+		passText.onkeyup = function(){
+			changeLabel(this, passLabel);
+		}
+
+		function changeLabel(valEle, labelEle){
+			var val = valEle.value.split(' ').join('');
+
+			if( val == '' ){
+				labelEle.style.display = 'block';
+				valEle.value = '';
+			}else{
+				labelEle.style.display = 'none';
+			}
+		}
+	</script>
+</body>
+</html>

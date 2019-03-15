@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="./reset.css">
+	<style type="text/css">
+		body{
+			-webkit-perspective: 1500;
+		}
+		.main{
+			position: relative;
+			width: 200px;
+			height: 200px;
+			margin: 100px auto;
+			cursor: pointer;
+			-webkit-transform-style: preserve-3d;
+			-webkit-transition: -webkit-transform 2s ease 0s;
+		}
+		.main p{
+			position: absolute;
+			width: 200px;
+			height: 200px;
+			text-align: center;
+			line-height: 200px;
+			font-size: 26px;
+			opacity: 0.5;
+		}
+		.main p:nth-of-type(1){
+			background: red;
+			-webkit-transform: translateZ(100px);
+		}
+		.main p:nth-of-type(2){
+			background: orange;
+			-webkit-transform: rotateX(90deg) translateZ(100px);
+		}
+		.main p:nth-of-type(3){
+			background: yellow;
+			-webkit-transform: rotateX(-90deg) translateZ(100px);
+		}
+		.main p:nth-of-type(4){
+			background: green;
+			-webkit-transform: rotateY(90deg) translateZ(100px);
+		}
+		.main p:nth-of-type(5){
+			background: skyblue;
+			-webkit-transform: rotateY(-90deg) translateZ(100px);
+		}
+		.main p:nth-of-type(6){
+			background: blue;
+			-webkit-transform: rotateY(180deg) translateZ(100px);
+		}
+		.main:hover{
+			-webkit-transform: rotateX(45deg) rotateY(45deg);
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<p>HTML5布局之路</p>
+		<p>HTML5学堂</p>
+		<p>CSS3旋转特效</p>
+		<p>独行冰海</p>
+		<p>梦幻雪冰</p>
+		<p>学习HTML5</p>
+	</div>
+</body>
+</html>

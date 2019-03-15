@@ -1,0 +1,10 @@
+属性选择器：
+	a[rel]{color:red;}    //a链接中有rel属性
+	a[rel="friend"]{color:red;}	//rel属性值是friend的a链接
+	a[rel~="friend"]{color:red}	//rel属性值中包含  friend ‘单词’的链接
+	a[title^="image"]{background-image:url(pdf.img);}	//title属性值以image ‘单词’开头的链接
+	a[title$="lib"]{bacakground-image:url(pdf.img);}	//title属性值以lib 单词结束的 链接
+	a[title*=".pdf"]{background-image:url(pdf.img);}	//title属性中任意地方出现 .pdf 的链接
+	
+	a[href^="http//"][href*="/folder/"][href$=".pdf"]{background-image:url(pdf.img);}  //多属性选择器
+	

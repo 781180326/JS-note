@@ -1,0 +1,204 @@
+isset函数：
+当变量存在且值不为null，返回TRUE
+若变量不存在，返回FALSE
+若变量存在但值为null，返回FALSE
+	$arr = [ "白斌","白斌" ];
+	print_r($arr)；打印出数组
+
+	$arr[ ] = "白斌";
+	$arr[ ] = "白斌";	
+	print_r($arr); =>[0]=>"白斌",[1]=>"白斌"
+
+	$arr[ 0 ] = "白斌";
+	$arr[ 1 ] = "白斌";	
+	print_r($arr); =>[0]=>"白斌",[1]=>"白斌"
+
+	$arr["php"] =[];
+	$arr["php"][] = "白斌";
+	$arr["php"][] = "白斌";
+	$arr["php"][] = "白斌";
+	$arr["html"] =[];
+	$arr["html"] [] = "白斌";
+	$arr["html"] [] = "白斌";
+	$arr["html"] [] = "白斌";		
+	print_r($arr); =>["php"]=>[ [ 0 ] =>"白斌",[ 1 ]=>"白斌" ],
+	                         ["html"]=>[ [ 0 ] =>"白斌",[ 1 ]=>"白斌" ]
+	
+
+
+
+	遍历数组
+	foreach($arr as $k=>$value){
+		if(is_array($value)){
+			echo $k.":<br/>";
+			foreach($value as $key=>$v){
+				echo  $key."=>".$v;
+			}
+		}else{
+			echo $k."=>".$value;
+		}
+	
+	}
+
+
+
+
+
+
+	implode();把数组合并成字符串
+	$arr = [ "白斌", " 白斌 ", " 白斌 " ];
+	$str = implode($arr);
+	echo $str; =>白斌白斌白斌
+	$str = implode(",",$arr); 
+	echo $str;=>白斌,白斌,白斌
+
+
+
+	explode() ; 把字符串拆分为数组
+	$str = "abcabcabc";
+	$arr = explode("c",$str);
+	print_r($arr); => ["ab","ab","ab"]
+	
+
+
+
+
+
+	in_array();判断内容是否在数组中   返回值：true  false
+	$arr = array(1,2,3,4,5);
+	in_array(1,$arr,TRUE); = >true
+	第一个参数是 要判断的内容，第二个参数是判断的数组，第三个参数是表示是否判断类型
+	
+
+
+
+
+	array_search();判断内容是否在数组中   ，如果存在返回键名,如果没有返回FALSE
+	array_search(1,$arr);=> 0
+	
+
+
+
+	
+	array_change_key_case();更改键名大小写
+	$arr = array( "url " =>"www.baidu.com", "name " =>"baibin " );
+	array_change_key_case($arr); 默认是更改为小写
+	array_change_key_case($arr,CASE_UPPER);  更改为大写
+	更改后如果出现两个键名相同，后面的元素会覆盖前面的元素，相当于重新赋值
+
+
+
+
+
+
+	array_chunk();将数组拆分为指定长度的数组，先满足前面的长度需要
+	$arr = array(  "url " =>"www.baidu.com", "name " =>"baibin " ,"url1 " =>"www.baidu.com", "name1 " =>"baibin ");
+	$arr1 = array_chunk( $arr,3 );  
+	print_f($arr1)=>[ 0 ] => [ www.baidu.com, baibin,www.baidu.com] ,[1]=>[baibin]
+	$arr1 = array_chunk( $arr,3 ,true); 第三个参数设置是否保留键名
+	 print_f($arr1)=>[ 0 ] => [ "url"=>"www.baidu.com","name"=>" baibin","url1"=>"www.baidu.com"] ,[1]=>["name1"=>"baibin"]
+
+	
+
+
+
+	array_combine();将两个数组合并为一个数组，第一个数组参数中的值作为键名，第二个数组参数中的值作为键值,如果两个数组长度不相等，会报错，并且返回FALSE
+	$arr1 = array("url","name");
+	$arr2 = array(" www.baidu.com","baibin");
+	$arr0 = array_combine($arr1,$arr2); =>[  "url " =>"www.baidu.com", "name " =>"baibin "  ]
+		
+
+
+
+
+
+
+
+
+
+	array_diff();比较在其他数组中不存在的当前数组中的键值 ，第一个参数为当前数组，后面的都是比较数组 ,返回值是一个数组,数组中是键值对（如果有的话）
+	$arr = array( "baidu","baibin","yangmaio" );
+	$arr1 = array("baidu");
+	$arr2 = array("aaaa","bbbb","baibin");
+	$arr0 = array_diff($arr,$arr1);
+	print_f($arr0); => [ "baibin","yangmaio" ]
+
+	$arr0 = array_diff($arr,$arr1,$arr2);   返回在 另外的所有数组中都不存在的值
+	print_f($arr0); => [ "yangmaio" ]
+
+	
+
+	array_diff_key();比较在其他数组中不存在的当前数组中的键名 ，第一个参数为当前数组，后面的都是比较数组 ,返回值是一个数组，数组中是键值对（如果有的话）
+	$arr = array(  " url "=>"www.baidu.com" , "name" => "baibin"  );
+	$arr1 = array(  " weburl "=>"www.baidu.com" , "name" => "baibin"  );
+	$arr0 = array_diff_key(  $arr ,  $arr 1  ) ;
+	print_r( $arr0  ); = > [  " url "=>"www.baidu.com"  ]
+
+
+
+	array_diff_assoc();比较在其他数组中不存在的当前数组中的键值对 （键名与键值都比较），第一个参数为当前数组，后面的都是比较数组 ,返回值是一个数组，数组中是键值对（如果有的话）
+	
+
+
+
+
+
+
+
+
+
+
+
+	each();将数组元素拆分成新的数组  会有一个隐含的指针，每次将指针指向的元素拆分为一个新的数组，
+	         然后指针向后移动一位，到了结尾会返回false
+	$arr = array("url"=>"www.baidu.com","name"=>"baidu ");
+	$arr1 = each($arr);
+	print_r($arr1);=>[0]=>url,[key]=>url,[1]=>www.baidu.com,[value]=>www.baidu.com
+	$arr2 = each($arr);
+	print_r($arr2);=>[0]=>name,[key]=>name,,[1]=>baidu ,[value]=>baidu 
+
+
+
+
+
+
+
+
+	list();将数组中的元素赋值给两个数组,只用于索引数组	
+	$arr = array("白斌","白斌");   =>[0]=>白斌,[1]=>白斌
+	list($url , $value) = $arr;   将索引为0 的值传入 第一个参数 ，索引为1 的值传入第二个参数
+	echo $url.$value;=>白斌，白斌
+	$arr = array("url"=>"www.baidu.com","name"=>"baibin");
+	while( list($url,$value) = each($arr) ){
+		echo $url."=>".$value;
+	} = > url=>www.baidu.com name=>baibin
+	
+
+
+
+
+
+
+	
+	count();统计数组中元素的个数  第二个参数是是否递归查找
+	$arr = array( 1,2,3,4,5,array(6,7,8,9,10));
+	echo count($arr); =>6   1,2,3,4,5,array(6,7,8,9,10);
+	echo count($arr，1); =>11  1,2,3,4,5, array(6,7,8,9,10),6,7,8,9,10
+
+
+
+
+
+
+
+	
+	操作数组中的指针
+	reset($arr);将数组中的指针移动到数组第一个元素，并返回第一个元素值
+	end($arr);将数组中的指针移动到数组最后一个元素，并返回最后一个元素值
+	prev($arr);将数组中的指针移动到上一个元素，并返回上一个元素值，如果到开头，返回FALSE，如果当前元素的值为空或者为0，返回false
+	next($arr);将数组中的指针移动到下一个元素，并返回下一个元素值，如果到结尾，返回FALSE，如果当前元素的值为空或者为0，返回false
+	current($arr)；返回当前指针指向的元素的值，如果当前元素为空或者0 返回FALSE
+	key($arr);  返回当前指针指向的键名  索引数组返回索引
+
+	
+	

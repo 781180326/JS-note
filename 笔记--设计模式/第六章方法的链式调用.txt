@@ -1,0 +1,175 @@
+
+	调用链的结构：
+		
+		$()函数：//通过id获取对象集合
+					  //传入多个ID获得多个对象数组
+					  //传入一个ID，获取单个对象
+			function $() {
+				var  elements = [];
+				for( var i = 0, len = arguments.length; i < len; i++ ){
+						var element = arguments[i];
+						if( typeof element === 'string' ){
+							element = document.getElementById( element );
+						}
+						if( arguments.length === 1 ){
+							return element;
+						}
+						elements.push(element);
+				}
+				
+				return elements;
+			}
+			
+			
+	修改上面的函数，将其修改为一个构造器，并且不再区分多个对象还是一个对象，统一存在数组中，方便后续链式操作。让定义在构造器函数的prototype属性所指对象的方法都返回调用其的那个实例的引用。
+	
+			(function() {
+				//私有“类”,参数为一个（伪）数组，可将其扩展为不仅仅局限于依靠ID获取对象，比如".class" "tagname"等等通过类名、标签名获取，也可以扩展css中的样式类选取
+				function _$( els ){
+					this.elements = [];
+					for( var i = 0, len = els.leng; i < len; ++i ){
+						var element = els[i];
+						//如果传入字符串，获取这个字符串ID对应的对象，否则如果传入的不是字符串，比如直接传入一个对象，就会将这个对象直接存入数组中。
+						if( typeof element === 'string' ){
+								element = document.getElementById( element );
+						}
+						this.elements.push(element);
+					}
+				}
+				//_$的原型对象：
+				_$.prototype = {
+					each: function( fn ){
+						for(var i = 0; i < this.elements.elngth; ++i){
+							fn.call(this,this.elements[i]);
+						}
+						return this;
+					},
+					setStyle: function( prop, val ) {
+							this.each( function( el ){
+								el.style[prop] = val;
+							} );
+							return this;
+					},
+					show: function(){
+						this.setStyle.call( this, 'display', 'block');
+						return this;
+					},
+					addEvent: function( type, fn ){
+						var add = function( el ) {
+							if( window.addEventListener ){
+								el.addEventListener( type, fn, false );
+							}else if( window.attachEvent ){
+								el.attachEvent( 'on'+type, fn );
+							}
+						};
+						this.each( function( el ){
+							add( el );
+						} );
+						return this;
+					}
+				};
+				window.$ = function(){
+					//返回实例化出来的对象，这个对象有一个elements属性，存放的是对象集合
+					return new _$(arguments);
+				};
+			
+			})();
+			
+	现在我们可以这样来写代码：
+	
+		//第一行直接传入一个对象，这个对象放入了arguments数组，然后被 _$构造器接受，构造器直接将数组中的对象存入此对象的 elements属性数组。
+		$( window ).addEvent( 'load', function(){
+			$( 'test_1', 'test_2')
+				.show()
+				.setStyle( 'color', 'red' )
+				.addEvent( 'click', function( e ){
+					$( this ).setStyle( 'color', 'green' );
+				} );
+		);
+		
+		
+		可以继续对上面的代码进行更改，当方法需要扩充的时候，我们可以进行一个添加原型方法的链式操作：
+			
+		Function.prototype.method = function( name, fn ){
+			this.prototype[name] = fn;
+			return this;
+		}
+		(function() {
+				function _$( els ){
+					this.elements = [];
+					for( var i = 0, len = els.leng; i < len; ++i ){
+						var element = els[i];
+						if( typeof element === 'string' ){
+								element = document.getElementById( element );
+						}
+						this.elements.push(element);
+					}
+				}
+		
+				_$.method( 'each', function( fn ){
+						for(var i = 0; i < this.elements.elngth; ++i){
+							fn.call(this,this.elements[i]);
+						}
+						return this;})
+					.method( 'setStyle', function( prop, val ) {
+						this.each( function( el ){
+							el.style[prop] = val;
+						} );
+						return this;
+					} )
+					.method( 'show',  function(){
+							this.setStyle.call( this, 'display', 'block');
+							return this;
+					})
+					.method( 'addEvent', function( type, fn ){
+							var add = function( el ) {
+								if( window.addEventListener ){
+									el.addEventListener( type, fn, false );
+								}else if( window.attachEvent ){
+									el.attachEvent( 'on'+type, fn );
+								}
+							};
+						this.each( function( el ){
+							add( el );
+						} );
+						return this;
+					});
+				
+				window.$ = function(){
+					return new _$(arguments);
+				};
+			})();
+			
+			如果某个API已经定义了一个$函数，那么这两个全局变量名会冲突，所以我们一般会给它一个安装器：
+			
+				将上面的最后一个 window.$方法改写为：
+					window.installHelper = function( scope, interface ){
+						scope[ interface ] =  function(){
+							return new _$(arguments);
+						};
+					}
+				此方法传入一个对象，和一个字符串，执行这个方法以后调用就要用 对象.字符串（）的形式来使用原来的$函数
+				我们可能会这样使用它：
+				installHelper( window, '$' );
+				$('example').show();
+		
+		
+		最后：用回调从支持链式调用的方法获取数据
+			一般因为要获取数据，所以要返回得到的数据，这就和链式操作的返回this起了冲突，所以我们想进行链式操作，还想从方法中得到数据，就要用回调函数了，比如：
+			
+				window.API = window.API || function(){
+					var name = 'hello world';
+					
+					this.setName = function( newName ){
+						name = newName;
+						return this;
+					};
+					this.getName( callback ){
+						callback.call( this,name );
+						return this;
+					};
+				};
+				
+				var o = new API();
+				o.getName( console.log ).setName( 'nice to meet you' ).getName(console.log);
+		

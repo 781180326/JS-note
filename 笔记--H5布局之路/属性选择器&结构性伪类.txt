@@ -1,0 +1,49 @@
+1、属性选择器
+
+		E[attr]				包含属性attr的E元素
+		E[attr="val"]    	属性值为val的E元素
+		E[attr^="val"]		属性attr的值以val开头的E元素
+		E[attr$="val"]		属性attr的值以val结尾的E元素
+		E[attr*="val"]		属性attr的值包含val字符串的E元素
+		E[attr~="val"]		属性attr的值为以空格分隔的单词，并且其中一个等于val的E元素
+		E[attr|="val"]		属性attr的值为以val开头并且后面紧跟连字符 或 值等于val，的E元素
+		
+2、CSS3结构性伪类
+
+		E:root 					选择文档的根元素：HTML元素
+		
+		E:nth-child(n)			选择E的父级下的第n个子元素，并且其类型为E，否则匹配失败。第一个编号为1
+			E:nth-child(even)		偶数
+			E:nth-child(odd)		奇数
+			当E:nth-of-type(2n)、E:nth-last-of-type(3n-1)、E:nth-child(n+1)、E:nth-last-child(4n+1)这样的形式出现时，n的取值从0开始
+		
+		E:nth-last-child(n)		选择E的父级下的倒数第n个子元素，并且其类型为E，否则匹配失败。第一个编号为1
+		E:first-child			选择E的父级下的第一个子元素，并且其类型为E，否则匹配失败。也就是E:nth-child(1)
+		E:last-child			选择E的父级下的最后一个子元素，并且其类型为E，否则匹配失败。也就是E:nth-last-child(1)
+		
+		E:nth-of-type(n)		选择E的父级下的第n个E元素，第一个编号为1
+		E:nth-last-of-type(n)	选择E的父级下的倒数第n个E元素，第一个编号为1
+		E:first-of-type			选择E的父级下的第一个E元素，也就是E:nth-of-type(1)
+		E:last-of-type			选择E的父级下的倒数第一个E元素，也就是E:nth-last-of-type(1)
+		
+		E:only-child			选择E的父级下仅有的一个子元素，也就是 :first-child:last-child 或者 :nth-child(1):nth-last-child(1)
+		E:only-of-type			选择E的父级下仅有的一个E元素，也就是 :first-of-type:last-of-type  或者 :nth-of-type(1):nth-last-of-type(1)
+		
+		E:empty					选择一个不包含任何节点(包括text节点)的E元素
+		E:not(s)				选择不符合S的任何E元素，可以不写E，直接使用:not(s)选择不符合S的任何元素
+		E:target 				匹配相关URL指向的E元素。
+		
+		E:enabled				选择表单中激活的元素
+		E:disabled				选择表单中禁用的元素
+		E:checked				选择表单中被选中的radio & checkbox 元素
+		E:focus					选择获得焦点的E元素
+		
+		E:selection				选择用户当前选中的元素
+		
+		 
+		！！！ E元素的父级最高为body ！！！
+
+		
+		
+		
+		

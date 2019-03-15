@@ -1,0 +1,19 @@
+{
+  "name": "sadsafsfsfaf",
+  "version": "0.0.1",
+  "description": "a module for learning perpose",
+  "main": "none",
+  "scripts": {
+    "test": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "module",
+    "mypackage"
+  ],
+  "author": "bwhite",
+  "license": "ISC"
+}

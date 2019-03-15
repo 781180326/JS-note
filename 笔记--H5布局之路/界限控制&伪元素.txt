@@ -1,0 +1,65 @@
+1、界限控制
+	①、最小高度 min-height
+	②、最小宽度 min-width
+	③、最大宽度 max-width
+	④、最大高度 max-height
+
+2、伪元素
+	①理解：
+	可以理解为‘虚假的元素’，它们虽然会在内容元素的前后插入额外的元素，但并不会在文档中生成，在文档的源代码中不能找到它们。
+	虽然是‘虚假的元素’，但是在表现上和‘普通元素’并没有什么区别，可以为他们添加任何样式。
+	
+	②伪元素种类：
+		:first-letter
+		:first-line
+		:before
+		:after
+		
+	③:before和:after:
+		:before 会在选中的元素之前‘添加’一个元素；
+		:after	会在选中的元素之后‘添加’一个元素；
+		
+		默认情况下，添加的元素以 inline 行元素格式渲染。
+		
+		如果需要以块元素显示，添加属性 display:block；
+		
+		在伪元素中添加内容使用 content 属性。
+		
+		如果不为伪元素设置content属性，伪元素并不会显示。
+		
+		如果希望伪元素能够显示，又不希望伪元素当中存在任何可视文本内容，可以在content中设置："\200B"（零宽度的空格）
+		
+		after清浮动：
+			.clearfix:after{
+				content: '\200B';
+				height: 0;
+				clear: both;
+				display: block;
+			}
+		
+		before背景图
+			.menu{
+				width:200px;
+				height: 191px;
+				padding-left: 197px;
+				border: 2px solid black;
+				font-size: 40px;
+				line-height: 191px;
+			}
+		
+			.menu:before{
+				content: '\200B';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 197px;
+				height: 191px;
+				background: url('./image/...') 0 0 no-repeat;
+			}
+			
+	④伪元素和伪类的区别：
+		伪元素处理结构，伪类处理样式；
+		
+		伪元素的效果可以通过添加一个实际的元素达到。
+		伪类  的效果可以通过添加一个实际的类达到。
+		这也是为什么它们一个称为伪类，一个称为伪元素的原因。

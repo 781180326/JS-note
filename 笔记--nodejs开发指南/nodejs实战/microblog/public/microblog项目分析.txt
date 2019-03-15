@@ -1,0 +1,66 @@
+功能分析：
+    首先，微博应该以用户为中心，因此需要用户的注册和登录功能
+    然后，微博的核心功能是信息的发表，这个功能包括数据库访问、前端展示等
+    最后，一个完整的微博系统应该支持信息的评论、转发、圈点用户等功能
+
+路由规划：
+    /:首页
+    /u/[user]:　用户主页
+    /post:　发表信息
+    /reg: 用户注册
+    /login:　用户登录
+    /logout: 用户登出
+
+    发表信息、用户登出页面必须是已经登陆的用户才能操作的功能
+    用户注册、用户登录面向的对象应该是未登录的
+    首页和用户主页则针对已登入和未登入的用户显示不同的内容
+
+界面设计：
+    将项目分为几个独立的块(组件)，再像php那样使用include 将某个视图组件导入
+
+用户注册和登录：
+    需要引入会话机制来记录用户状态，还要访问数据库来保存和读取用户信息
+
+    要使用express-session、connect-mongo、connect-flash这几个包，都需要npm install 和 require.
+
+    ？？？？node的session是怎么实现的？？？怎么做到的session？？？原理是什么？？？
+
+    １、访问数据库
+        选用ＭongoDB作为网站的数据库系统，这是一个开源的NoSQL数据库，相比关系型数据库，更轻巧、灵活，非常适合在数据规模很大，事务性不强的场合下使用。
+
+        NoSQL: 　曾经是一个轻量、开源、不提供SQL功能的关系型数据库，但现在NoSQL被认为是Not Only SQL 的简称，主要指非关系型、分布式、不提供ACID的数据库系统。　
+                它并不是为了取代SQL数据库的，而是作为一个补充，它和SQL数据库有着各自不同的适应领域。
+                NoSQL不像SQL数据库一样都有着统一的架构和接口，不同的NoSQL数据库系统从里到外可能完全不同。
+
+        MongoDB: 是一个对象数据库，它没有表、行等概念，也没有固定的模式和结构，所有的数据以文档的形式存储。所谓文档就是一个关联数组式的对象，它　的内部由属性组成，一个属性对应的值可能是一个数、字符串、日期、数组，甚至是一个嵌套的文档。
+            比如：
+            {   "_id" : ObjectId( "4f7fe8432b4a1077a7c551e8" ),
+                "uid" : 2004,
+                "username" : "byvoid",
+                "net9" : {
+                    "nickname" : "BYVoid",
+                    "surname" : "Kuo",
+                    "givenname" : "Carbo",
+                    "fullname" : "Carbo Kuo",
+                    "emails" : [ "byvoid@byvoid.com", "byvoid.kcp@gmail.com" ],
+                    "website" : "http://www.byvoid.com",
+                    "address" : "Zijing 2#, Tsinghua University"
+                }
+            }
+
+            从格式来看文档好像JSON，没错MongoDB的数据格式就是JSON，因此与JavaScript的亲和性很强。
+            在MongoDB中对数据的操作都是以文档为单位的，当然我们也可以修改文档的部分属性。
+            对于查询操作，我们只需要制定文档的任何一个属性，就可以在数据库中将满足条件的所有文档筛选出来。为了加快查询，MongoDB也对文档实现了索引，这一点和SQL数据库一样。
+
+        连接数据库：
+            首先、安装MongoDB，官网：http://www.mongodb.org/
+
+		解压、安装、创建数据库文件目录、运行：在mongodb/bin下运行 sudo ./mongod --dbpath /data/db(数据库文件目录)、在mongodb/bin下运行 ./mongo　启动成功、创建数据库文件 use 文件名　比如use microblog就创建了一个名为microblog的mongodb文件　也可以叫做创建了一个名为microblog的数据库吧.
+
+        ２、登入和登出
+
+
+
+        两个问题：
+            ①crypto　的用法　＝》　查手册
+            ②req.flash的用法，也就是 connect-flash的用法　＝》　查手册

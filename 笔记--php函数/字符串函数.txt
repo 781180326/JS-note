@@ -1,0 +1,120 @@
+	PHP字符串中，双引号中可以解析变量名，单引号中不可以，双引号中有的字符需要转义，单引号不用
+	
+	
+	str_replace("a","b",$str);
+	字符串替换，将$str中的a 替换为b
+
+	implode():  将数组连接为字符串
+	implode('连接字符串(可选，不填就是按照空字符串连接)',数组);
+		implode($aaa);
+		implode('-',$aaa);
+
+	explode()  : 字符串拆分成数组
+	explode('在哪拆分',‘拆分的字符串',返回数组的数目（可选）);
+		explode(",",$aaa,3);
+
+	number_format() : 格式化金额字符串函数
+	number_format("字符串",小数位数,小数点(可选，可自定义),千位分隔符(可选，可自定义));
+
+		number_format($aaa,3);
+		number_format($aaa,3,'|','-');	
+
+	md5() : md5加密
+		md5($aaa);
+	strrev() :字符串翻转
+		strrev($aaa);
+	str_pad('字符串',生成的字符串的长度，'添加的内容',添加的方向)
+	方向可选值：
+		STR_PAD_BOTH 左右两侧进行填充，如果填充为奇数，那么右侧多填	
+		STR_PAD_LEFT  左侧填充
+		STR_PAD_RIGHT右侧填充
+	str_pad( $aaa , 30 , '+' , STR_PAD_BOTH );	
+
+	strtolower() : 将字符串转换为小写
+		strtolower($aaa); 
+	strtoupper() : 将字符串转换为大写
+		strtoupper($aaa); 
+	ucfirst() : 首字母大写
+		ucfirst($aaa);
+	ucwords() : 首单词大写
+		ucwords($aaa);
+	trim() : 删除字符串左右的空格
+		trim($aaa);
+	ltrim() : 删除字符串左侧空格
+		ltrim($aaa);
+	rtrim() : 删除字符串右侧空格
+		rtrim($aaa);
+	strlen():获取字符串长度
+		strlen($aaa);
+	echo   ：输出一个或多个字符串，将这些字符串连接成一个输出
+		echo $num,$aaaa,$kkk;
+	print   :   输出一个字符串，不能输出多个
+
+	printf()  : 格式化输出字符串，和c语言的printf一样
+
+	substr() : 截取字符串
+		substr(',',$str);   用逗号截取$str字符串
+
+	strchr()  : 在一个字符中串查找另一个字符串，区分大小写
+		strchr($aaa,'bc'); 在$aaa中查找‘bc’
+	strichr() : 在一个字符中串查找另一个字符串，不区分大小写
+
+	strrchr() : 在一个字符串中从后面查找另一个字符串，返回字符串到结尾
+
+	strpos() : 在一个字符串中查找另一个字符串的位置（下标），区分大小写
+
+	stripos() : 在一个字符串中查找另一个字符串的位置（下标），不区分大小写
+
+	strrpos() : 在一个字符串中从后面查找另一个字符串的位置（下标），区分大小写
+
+	 读：
+	get_magic_quotes_runtime() 获得外部文件及数据库资料时是否已经打开转义
+	set_magic_quotes_runtime() 设置获得外部文件及数据库资料时是否进行转义
+	strip_tags() 去除HTML XML php的标签项
+		strip_tags(字符串,"想要保留的标签")
+		strip_tags(str,"<span>")  
+
+	写：
+	get_magic_quotes_gpc() 返回php.ini中是否开启了自动转义 开启返回1 没有返回0
+	addslashes() 在预定义字符串前加上反斜杠(转义)
+	stripslashes() 把转义字符串前的反斜杠去掉（反转义）
+	if(!get_magic_quotes_gpc()){
+		
+		$cname = addslashes($_GET['cname']); 
+		$uname = addslashes($_GET['uname']); 
+	}else{
+		$cname = $_GET['cname']; 
+		$uname = $_GET['uname']; 
+	}
+	
+
+
+	字符串处理函数：
+	parse_url();   解析URL，返回其组成部分
+		$url = "http://www.baidu.com/admin/index.php?m=aaa&a=bbb";
+		$arr = parse_url($url);
+		echo "<pre>";
+		print_r($arr);
+		echo "</pre>";
+		echo parse_url($url,PHP_URL_HOST）;
+
+			=>
+			Array
+			(
+				[scheme] => http
+				[host] =>www.baidu.com
+				[path] => /admin/index.php
+				[query] => m=aaa&a=bbb
+			)
+			www.baidu.com
+
+	urlencode() url编码	
+	urldecode() 解码已编码的内容
+
+	htmlentities() 将字符串转化为HTML实体    会对中文进行转换，将其转换为实体代码
+		htmlentities(操作内容，转换规则（默认转换双引号）)
+		htmlentities("<h1>asdasdas</h1>");  转换为实体代码
+	htmlspecialchars() 将字符串转化为HTML实体    不会对中文进行转换
+	htmlspecialchars_decode() 将已经转换为HTML实体的内容，转换为字符串（反实体）
+	
+	

@@ -1,0 +1,59 @@
+1、标签内书写
+	找不到哪里出现问题，项目又着急上线，需要立即修改某个部分样式时
+	
+2、头部书写
+	比较大型的网站首页，需要以最快的速度加载首页，把样式代码书写在网页头部是最好的选择
+	
+3、外部引入
+	小型网站没有太多的页面，也不会生成太大量的代码，因此可以将整站的代码防止在同一个文件中。
+	
+4、@import语法：
+	<style>
+		@import url("./css/style.css")
+	</style>
+	
+5、link语法：
+	<link rel="stylesheet" href="./css/style.css" type="text/css" media="all" />
+	
+6、link与import的区别：
+	①link是XHTML标签，除了加载css还可以加载其他事务。
+		import是css语法，只能加载css代码
+	②link在引入css时，页面加载时同时加载
+		import在页面完全载入以后加载
+	③link是XHTML标签，无兼容问题
+		import是在css2.1中提出的，低版本浏览器不支持
+	④link支持使用JavaScript控制DOM去改变样式
+		import不支持
+		
+7、页面回流与重绘
+	页面回流：当render tree 中的一部分或全部因为元素的规模尺寸、布局、隐藏等改变而引起的页面·重新渲染·（重新构建绘制）（注意，重新计算每个元素的样式并重新渲染）
+	页面重绘：当render tree 中的一些元素需要更新属性，但这些属性只会影响元素的外观、风格，而不会影响元素的布局，此类的页面渲染叫做页面重绘。
+	
+	不管是回流还是重绘，都会影响网页加载速度。只不过回流更慢。网页文档自上而下加载，所以建议将css代码放在head标签中。
+	
+8、样式书写顺序
+	(1)显示样式	
+	(2)自身样式
+	(3)文本样式
+	(4)css3新样式
+	
+	display
+	position 
+	left、right、bottom、left
+	float
+	clear
+	width
+	height
+	margin
+	padding
+	border
+	background
+	color
+	font
+	text-decoration
+	text-align
+	white-space
+	text-XXX
+	CSS3类
+	
+9、后代选择器尽量不要超过3层，不要超过4层

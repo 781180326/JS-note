@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		/*方法一 绝对定位+margin:auto*/
+		/*.wrap { 
+			position: relative;
+			width: 400px;
+			height: 400px;
+			background: #fcf;
+		}
+		.box {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			width: 200px;		不设置宽高会因为四个方向距离为0而覆盖父元素
+			height: 200px;
+			margin: auto;      top、bottom、left、right为0必须配合设置四个方向的margin为auto
+			background: #999;
+		}*/
+		/*方法二 绝对定位+负margin*/
+		/*.wrap { 
+			position: relative;
+			width: 400px;
+			height: 400px;
+			background: #fcf;
+		}
+		.box {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 200px;
+			height: 200px;
+			margin: -100px 0 0 -100px;
+			background: #999;
+		}*/
+		/*方法三 父元素padding*/
+		/*.wrap {
+			width: 200px;
+			height: 200px;
+			padding: 100px;
+			background: #fcf;
+		}
+		.box {
+			width: 200px;
+			height: 200px;
+			background: #999;
+		}*/
+		/*方法四 子元素margin*/
+		/*.wrap {
+			width: 400px;
+			height: 400px;
+			background: #fcf;
+		}
+		.box {
+			float: left;	触发BFC，否则子元素的margin会给父级造成影响
+			width: 200px;
+			height: 200px;
+			margin: 100px;
+			background: #999;
+		}*/
+		/*方法五*/
+		.wrap {
+			display: table-cell;
+			width: 400px;
+			height: 400px;
+			vertical-align: middle;
+			background: #fcf;
+		}
+		.box {
+			width: 200px;
+			height: 200px;
+			margin: 0 auto;
+			background: #999;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="box"></div>
+	</div>
+</body>
+</html>

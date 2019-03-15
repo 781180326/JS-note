@@ -1,0 +1,66 @@
+width/height:
+	auto: 默认值，浏览器根据内容计算实际宽高
+		但是，对块级元素使用auto，它的宽一直会是父元素块的宽度，只有高度跟随内容变化
+		对于内联元素，会计算出实际宽高
+
+	% ： 基于父元素包含块 ‘宽/高’的百分比，父级如果为块元素且没有设置宽度，其宽度为行宽，也就是默认宽
+	inherit： 继承父元素的‘宽/高’属性的值
+		并不是说和父元素宽高一样，是他们的属性值一样，比如如果父元素是百分比宽度，那么子元素也会是基于父元素基础的百分比宽度
+
+margin:
+	auto: 浏览器计算外边距，也就是根据到父元素边框的距离‘平均’分配外边距 
+			margin-left = margin-right = （父级内容区宽度 - 含边框和内边距的当前元素宽度）/ 2
+	%： 根据父元素的‘宽度’的百分比，父级如果为块元素且没有设置宽度，其宽度为行宽，也就是默认宽
+	inhert: 从父元素继承外边距, 和宽高一样，继承的是属性的值，值！
+	
+	margin的合写：margin: 上 右 下 左
+	margin的分写：margin-top | margin-right | margin-bottom | margin-left
+	
+	margin:0 auto水平居中只对块元素有效，对inline-block、inline等元素无效,对float和absolute等脱离文档流的元素无效
+	(注：虽然margin: 0 auto对脱离文档流的元素无效，但是px、em、rem等单位对其有效)
+	！！margin的auto值在垂直方向很多时候不起作用
+	margin值可以为负值
+
+padding:
+	auto: 浏览器计算内边距 平均分配
+	%: 根据父元素的‘宽度’的百分比，父级如果为块元素且没有设置宽度，其宽度为行宽，也就是默认宽
+	inhert: 从父元素继承外边距, 和宽高一样，继承的是属性的值，值！
+	
+	padding的合写：padding: 上 右 下 左
+	padding的分写：padding-top | padding-right | padding-bottom | padding-left
+	padding没有负值，设置负值时相当于0
+	
+border:
+	合写方法：
+		border: width style color
+		border-width: 上 右 下 左
+		border-style: 上 右 下 左
+		border-color: 上 右 下 左
+	分写方法:
+		border-left: 	width style color
+		border-right: 	width style color
+		border-top: 	width style color
+		border-bottom: 	width style color
+		
+	border-style取值： solid(实线) dashed(虚线) dotted(点线) none(无边框) inherit(从父级继承) hidden(隐藏边框)
+	border-width取值： thin(细) medium(默认) thick(粗) inherit  px  em  rem  (!!不能取%的值!!)
+	
+	border只设置style会按默认样式表现，不设置style则边框无效果
+	border: 0; 和 border: none;的区别：
+		border:0 会正常渲染，会占用内存空间。全兼容。
+		border:none 不会进行任何渲染，不会占用内存空间。IE6、7不兼容。
+		
+总结：
+	1、盒模型单位的选择：
+		通常在桌面端，px用的较多；
+		如果涉及响应式、自适应布局时会考虑使用百分比；
+		移动端百分比、em、rem等单位用的较多。
+	2、开发调试时使用背景颜色标识元素，不要使用边框，边框的宽度可能引起布局错乱。
+	3、外边距叠加问题，触发BFC就可以了。
+	4、父子间用padding、兄弟间用margin
+	5、当子元素的盒模型大小超出父级元素的内容区大小，会引发问题。
+	
+	
+	
+	
+	

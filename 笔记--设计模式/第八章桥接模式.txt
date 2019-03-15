@@ -1,0 +1,74 @@
+构建XHR连接队列：
+	需要构建一个Ajax请求队列。
+	队列存储请求。
+	
+	
+	asyncRequest是（返回）一个Ajax请求方法：这个方法会创建一个XHR对象，发送数据到URL、执行回调函数，传入的参数：method,url,callback,postData
+	
+	method方法：为函数添加原型方法
+	
+	forEach方法：让数组中的元素都执行某个方法（这个方法的参数就是数组中的元素）
+	
+	filter方法： 让数组中的元素都执行某个方法，将返回值为真的元素存储在另外一个数组返回。
+	
+	
+	window.DED：单体空间
+	
+	DED.util.Observer : 观察者构造函数
+		构建出来的对象：
+			属性：fns[]
+			方法： 
+				subscribe（订阅）：向fns中添加一个值（方法）
+				unsubscribe（退订）: 	用filter方法将fns中某个值（方法）删除
+				fire（引爆） : 用forEach方法让fns数组中的方法全部执行。
+				
+	DED.Queue： 队列的构造函数
+		构建出来的对象：
+			属性：
+				queue数组：存储队列中的元素
+				onComplete 对象：观察者对象实例（其fns保存请求完成的方法）
+				onFailure 对象：观察者对象实例）（其fns保存请求失败的方法）
+				onFlush 对象：观察者对象实例（保存正常流程进行的方法）
+				retryCount：请求重试的次数上限
+				currentRetry：用来累加请求重试的次数
+				paused：布尔  是否暂停
+				timeout：每次请求的时间上限
+				conn ：一个对象
+				timer：一个对象
+			
+			方法：
+				flush：没看懂。（应该是顺序执行队列中的所有请求，达到重试上限就清除，超时就重试）
+				setRetryCount：设置重试次数的上限
+				setTimeout：设置请求时间的上限
+				add：向队列最后面添加请求对象（向队列最后面添加新元素）
+				pause：设置暂停
+				dequeue：删除数组中的最后一个元素（删除队尾元素）
+				clear：清空数组
+		
+		
+		客户系统的实现：
+			创建一个队列实例
+			设置重试次数为5
+			设置超时时间为3秒
+			
+			获取DOM元素对象 items
+			获取DOM元素对象 results
+			获取DOM元素对象 queue-items
+			获取DOM元素对象 adders
+			新建一个requests数组保存我自己的请求
+			
+			队列中的 onFlush向其fns中添加方法：将请求的返回信息显示在results中，将requests数组中的第一个元素删除，将剩余的requests中的请求显示在queue-items中
+			队列中的onFailure向其fns中添加方法：以红色字体将 “连接错误”显示在results中
+			队列中的onComplet向其fns添加方法：以绿色字体将 “请求完成”显示在results中
+			
+			建立actionDispatcher（行动调度）方法：switch执行队列的 flush、dequeue、pause、clear方法
+			
+			建立添加请求的方法：向队列添加请求对象、requests中添加请求数据、重绘queue-items中的显示
+			给items添加点击事件：阻止默认事件、根据点击对象的id执行行动调度方法
+			给adders添加点击事件：清除默认事件、根据点击对象的ID添加请求
+			
+			
+				
+				
+			
+				

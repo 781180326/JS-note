@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <p>user: <%= name %></p>
+    <p>静态视图助手</p>
+    <p>appName: <%= appName %></p>
+    <p>sayhello: <%= sayHello() %></p>
+    <p>动态视图助手</p>
+    <p>appUrl: <%= appUrl %></p>
+    <p>welcome: <%= welcome() %></p>
+
+    <% if(items) {%>
+        <ul>
+            <% items.forEach(function(listitem, index){ %>
+                <% if(index == 0) { %>
+                    <li class="active">
+                <%}else{ %>
+                    <li>
+                <%} %>
+                    <%= listitem  %>
+                    </li>
+            <% }) %>
+        </ul>
+    <%} %>
+
+  </body>
+</html>

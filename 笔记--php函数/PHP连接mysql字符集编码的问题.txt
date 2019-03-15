@@ -1,0 +1,203 @@
+在PHP中插入获取mysql中中文字符时，要设置数据库连接的字符集编码：$dbs ->set_charset("utf8")；
+	
+	create table jq(
+    -> id int primary key auto_increment,
+    -> name varchar(50) not null,
+    -> title varchar(50) not null
+    -> )ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	
+	①if( $dbs ->set_charset("utf8")){
+		print("current charset is %s<br>".$dbs->character_set_name()."<br>");
+	}else{
+		echo "error : set charset";
+	}
+
+	②mysqli_query($dbs,"set names utf8");
+
+***注：①②都必须写在连接数据库下面，mysqli_query()上面，因为查询之前就要设置字符集编码！！！！
+
+
+还要设置头部
+header("Content-Type: text/html;charset=utf-8");
+
+
+还要设置mysql数据库中的表的字符集编码：
+
+一、查看 MySQL 数据库服务器和数据库字符集。
+
+mysql> show variables like '%char%';
++--------------------------+-------------------------------------+------
+| Variable_name | Value |......
++--------------------------+-------------------------------------+------
+| character_set_client | utf8 |...... -- 客户端字符集
+| character_set_connection | utf8 |......
+| character_set_database | utf8 |...... -- 数据库字符集
+| character_set_filesystem | binary |......
+| character_set_results | utf8 |......
+| character_set_server | utf8 |...... -- 服务器字符集
+| character_set_system | utf8 |......
+| character_sets_dir | D:\MySQL Server 5.0\share\charsets\ |......
++--------------------------+-------------------------------------+------
+
+二、查看 MySQL 数据表（table） 的字符集。
+
+mysql> show table status from sqlstudy_db like '%countries%';
++-----------+--------+---------+------------+------+-----------------+------
+| Name | Engine | Version | Row_format | Rows | Collation |......
++-----------+--------+---------+------------+------+-----------------+------
+| countries | InnoDB | 10 | Compact | 11 | utf8_general_ci |......
++-----------+--------+---------+------------+------+-----------------+------
+
+三、查看 MySQL 数据列（column）的字符集。
+
+mysql> show full columns from countries;
++----------------------+-------------+-----------------+--------
+| Field | Type | Collation | .......
++----------------------+-------------+-----------------+--------
+| countries_id | int(11) | NULL | .......
+| countries_name | varchar(64) | utf8_general_ci | .......
+| countries_iso_code_2 | char(2) | utf8_general_ci | .......
+| countries_iso_code_3 | char(3) | utf8_general_ci | .......
+| address_format_id | int(11) | NULL | .......
++----------------------+-------------+-----------------+--------
+
+四、查看当前安装的 MySQL 所支持的字符集。
+
+mysql> show charset;
+mysql> show char set;
++----------+-----------------------------+---------------------+--------+
+| Charset | Description | Default collation | Maxlen |
++----------+-----------------------------+---------------------+--------+
+| big5 | Big5 Traditional Chinese | big5_chinese_ci | 2 |
+| dec8 | DEC West European | dec8_swedish_ci | 1 |
+| cp850 | DOS West European | cp850_general_ci | 1 |
+| hp8 | HP West European | hp8_english_ci | 1 |
+| koi8r | KOI8-R Relcom Russian | koi8r_general_ci | 1 |
+| latin1 | cp1252 West European | latin1_swedish_ci | 1 |
+| latin2 | ISO 8859-2 Central European | latin2_general_ci | 1 |
+| swe7 | 7bit Swedish | swe7_swedish_ci | 1 |
+| ascii | US ASCII | ascii_general_ci | 1 |
+| ujis | EUC-JP Japanese | ujis_japanese_ci | 3 |
+| sjis | Shift-JIS Japanese | sjis_japanese_ci | 2 |
+| hebrew | ISO 8859-8 Hebrew | hebrew_general_ci | 1 |
+| tis620 | TIS620 Thai | tis620_thai_ci | 1 |
+| euckr | EUC-KR Korean | euckr_korean_ci | 2 |
+| koi8u | KOI8-U Ukrainian | koi8u_general_ci | 1 |
+| gb2312 | GB2312 Simplified Chinese | gb2312_chinese_ci | 2 |
+| greek | ISO 8859-7 Greek | greek_general_ci | 1 |
+| cp1250 | Windows Central European | cp1250_general_ci | 1 |
+| gbk | GBK Simplified Chinese | gbk_chinese_ci | 2 |
+| latin5 | ISO 8859-9 Turkish | latin5_turkish_ci | 1 |
+| armscii8 | ARMSCII-8 Armenian | armscii8_general_ci | 1 |
+| utf8 | UTF-8 Unicode | utf8_general_ci | 3 |
+| ucs2 | UCS-2 Unicode | ucs2_general_ci | 2 |
+| cp866 | DOS Russian | cp866_general_ci | 1 |
+| keybcs2 | DOS Kamenicky Czech-Slovak | keybcs2_general_ci | 1 |
+| macce | Mac Central European | macce_general_ci | 1 |
+| macroman | Mac West European | macroman_general_ci | 1 |
+| cp852 | DOS Central European | cp852_general_ci | 1 |
+| latin7 | ISO 8859-13 Baltic | latin7_general_ci | 1 |
+| cp1251 | Windows Cyrillic | cp1251_general_ci | 1 |
+| cp1256 | Windows Arabic | cp1256_general_ci | 1 |
+| cp1257 | Windows Baltic | cp1257_general_ci | 1 |
+| binary | Binary pseudo charset | binary | 1 |
+| geostd8 | GEOSTD8 Georgian | geostd8_general_ci | 1 |
+| cp932 | SJIS for Windows Japanese | cp932_japanese_ci | 2 |
+| eucjpms | UJIS for Windows Japanese | eucjpms_japanese_ci | 3 |
++----------+-----------------------------+---------------------+--------+
+
+以上查看 MySQL 字符集命令，适用于 Windows & Linux。
+
+四.修改表和字段的字符集
+//修改数据库
+mysql> alter database name character set utf8;
+//修改表
+alter table 表名 convert to character set gbk;
+//修改字段
+alter table 表名 modify column '字段名' varchar(30) character set gbk not null;
+//添加表字段
+alter table 表名 add column '字段名' varchar (20) character set gbk;
+注:执行命令过程中字段名不加引号
+
+ 
+ 
+ 
+其他的一些设置方法：
+ 
+修改数据库的字符集 
+   mysql>use mydb
+   mysql>alter database mydb character set utf-8;
+
+创建数据库指定数据库的字符集
+   mysql>create database mydb character set utf-8;
+ 
+
+通过配置文件修改:
+
+修改/var/lib/mysql/mydb/db.opt
+default-character-set=latin1
+default-collation=latin1_swedish_ci
+为
+default-character-set=utf8
+default-collation=utf8_general_ci
+
+重起MySQL: 
+[root@bogon ~]# /etc/rc.d/init.d/mysql restart
+
+ 
+
+通过MySQL命令行修改:
+
+mysql> set character_set_client=utf8;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set character_set_connection=utf8;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set character_set_database=utf8;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set character_set_results=utf8;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set character_set_server=utf8;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set character_set_system=utf8;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> set collation_connection=utf8;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> set collation_database=utf8;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> set collation_server=utf8;
+Query OK, 0 rows affected (0.01 sec)
+
+
+查看:
+mysql> | character_set_server
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | utf8                       |
+| character_set_connection | utf8                       |
+| character_set_database   | utf8                       |
+| character_set_filesystem | binary                     |
+| character_set_results    | utf8                       |
+| character_set_server     | utf8                       |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+8 rows in set (0.03 sec)
+
+mysql> show variables like 'collation_%';
++----------------------+-----------------+
+| Variable_name        | Value           |
++----------------------+-----------------+
+| collation_connection | utf8_general_ci |
+| collation_database   | utf8_general_ci |
+| collation_server     | utf8_general_ci |
++----------------------+-----------------+
+3 rows in set (0.04 sec)

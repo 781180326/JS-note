@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charst=utf-8" />
+	<meta name="Keywords" content="" />
+	<meta name="Deriction" content="" />
+	<title>古诗</title>
+
+	<style type="text/css">
+
+	#header,#footer{
+		width:960px;
+		height:30px;
+		background:#050;
+		margin:0 auto;	
+	}
+	#container{
+		width:960px;
+		margin:10px auto;
+	  	overflow: hidden;
+		position:relative;
+		
+	}
+	.mainBox{
+		width:650px;
+		float:left;
+		border-right:300px solid #aaa;
+		background-color: #333;
+	}/*通过设置边宽，让页面看起来很整齐 ，但是，可以看看页面效果
+		很显然设置了绝对定位的div无法撑起容器高度，所以绝对定位的容器高度不能大于另外一个没有绝对定位的容器的高度
+	*/
+	.sideBox{
+		width:280px;
+		position: absolute;
+		top:0;
+		right: 0;
+	}
+	.mainBox,.sideBox{
+		padding: 0 5px;
+		color:#f00;
+		margin-bottom: -9999px;
+		padding-bottom: 9999px;
+	}/*设置两列等高   《css那些事儿》pdf第116页*/
+	
+
+	</style>
+</head>
+<body>
+	<div id="header">首部内容</div>
+	<div id="container">
+		<div class="mainBox">
+			
+			主要区域<br/>
+			主要区域<br/>
+		</div>
+		<div class="sideBox">侧栏区域
+		主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域主要区域<br/>
+			主要区域<br/>
+			主要区域<br/>
+			主要区域<br/>
+			主要区域<br/>
+			主要区域<br/></div>
+	</div>
+	<div id="footer">底部区域</div>
+</body>
+</html>
+<!-- 另外的方法是通过javascript来设置当一个高度大于另一个的时候，设置为高的那个容器的高度 
+	代码：
+			<javascript>
+				mh = document.getElementById("contairen").getElementsByTagName("div")[0];
+				sh = document.getElementById("contairen").getElementsByTagName("div")[1];
+
+				if(mh.clientHeight<sh.clientHeight){
+					mh.clientHeight = sh.clientHeight+"px";
+				}else{
+					sh.clientHeight = mh.clientHeight+"px";
+				}
+
+			</javascript>
+-->

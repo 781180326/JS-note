@@ -1,0 +1,33 @@
+process是一个全局变量，也就是global对象的属性。
+用于描述当前Node.js进程状态的对象，提供了一个与操作系统的简单接口。
+
+1、process.argv: 命令行参数数组，第一个元素是node，第二个元素是脚本文件名，从第三个元素开始每个元素是一个运行参数。
+	//argv.js
+	console.log(process.argv);
+
+	//命令行
+	node argv.js name=aaa --v
+
+	//输出
+	[
+		'/usr/local/bin/node',
+		'/home/bwhite/Desktop/node-dome/nodejs核心模块/argv.js',
+		'name=aaaa',
+		'--v'
+	 ]
+
+2、process.stdout: 标准输出流，一般我们使用console.log()向标准输出打印字符，而process.stdout.write()函数提供了更底层的接口。
+
+	process.stdout.write('aaa'); 	//aaatrue
+	console.log('aaa'); 	//aaa
+
+3、process.stdin: 标准输入流，初始时它是被暂停的，要想从标准输入读取数据，必须恢复流，并手动编写流的事件响应函数。
+
+	process.stdin.resume();
+	process.stdin.on('data', function(data){
+		process.stdout.write('read from console.log:' + data.toString() );
+	})
+
+4、process.nextTick(callback): 将回调函数作为下次事件循环执行的事件。
+
+		与setTimeout(callback, 0);与此并不相同，效率低，并且顺延在时间队列最后。

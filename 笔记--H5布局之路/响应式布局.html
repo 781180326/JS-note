@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 5px;
+		}
+		ul{
+			margin: 0;
+			padding: 0;
+		}
+		.nav{
+			padding: 0 0.5%;
+		}
+		.nav li {
+			list-style: none;
+			height: 40px;
+			background: #f0f0f0;
+			margin-bottom: 5px;
+			line-height: 40px;
+			text-align: center;
+		}
+		.content article{
+			float: left;
+			height: 200px;
+			margin-bottom: 5px;
+			background: #ccc;
+		}
+		@media all and (max-width: 480px) {
+			.content article{
+				width: 49%;
+				margin-left: 0.5%;
+				margin-right: 0.5%;
+			}
+		}
+		@media all and (min-width: 481px) {
+			.nav{
+				float: left;
+				width: 23.5%;
+			}
+			.content{
+				float: right;
+				width: 74.5%;
+			}
+			.content article{
+				width: 49.5%;
+				margin-left: 0.5%;
+			}
+		}
+		@media all and (min-width: 961px) {
+			.content article{
+				width: 33%;
+				margin-left:0.33%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<nav class="nav">
+			<ul>
+				<li>列表内容1</li>
+				<li>列表内容2</li>
+				<li>列表内容3</li>
+				<li>列表内容4</li>
+			</ul>
+		</nav>
+		<section class="content">
+			<article>内容块1</article>
+			<article>内容块2</article>
+			<article>内容块3</article>
+			<article>内容块4</article>
+			<article>内容块5</article>
+			<article>内容块6</article>
+		</section>
+	</div>
+</body>
+</html>

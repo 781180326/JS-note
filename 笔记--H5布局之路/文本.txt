@@ -1,0 +1,204 @@
+1、行高
+	line-height：
+			normal		默认
+			数字		此数字会与当前的字体尺寸相乘来设置行高
+			px、em、rem、cm、mm...	不解释了
+			百分比%		基于当前字体尺寸
+			inherit		从父级继承
+		
+		如果line-height设置为负值，浏览器会按照默认行高渲染。
+	
+		默认状态下，浏览器字体大小为16px，行高各个浏览器不一样。
+		
+		行高对于文字有‘垂直居中’的作用。
+		
+2、文本装饰
+	text-decoration:
+			none		默认
+			underline	下划线
+			overline	上划线
+			line-through	删除线
+			blink		闪烁
+			inherit		从父级继承
+	
+3、文本首行缩进
+	text-indent:
+			px,em,rem...	固定距离的缩进
+			百分比%			基于父元素宽度的百分比
+			inherit			从父级继承
+		
+		可以设置为负值，表现为‘悬挂缩进’
+		
+4、文本水平对齐
+	text-align:
+			left			左对齐
+			right			右对齐
+			center			居中对齐
+			justify			两端对齐
+			inherit			从父级继承
+			
+5、元素垂直对齐   元素
+	vertical-align:			(在子元素上使用，设置父元素为display:table-cell)
+			baseline		默认，元素放置在父元素的基线上
+			sub				垂直对齐文本的下标
+			super			垂直对齐文本的上标
+			top				元素顶端与行中最高元素的顶端对齐
+			text-top		元素顶端与父元素字体的顶端对齐
+			middle			【较常用】把此元素放在父元素中部
+			bottom			元素顶端与行中最低元素的顶端对齐
+			text-bottom		元素底端与父元素字体的底端对齐
+			px,em,rem,cm...
+			百分比%			基于line-height的值的百分比
+			inherit			从父级继承
+			
+		此属性在表格单元格元素支持较完善，其他元素多不支持，所以如果要使用这个属性，尽量在表格使用，或 display:talbe-cell
+		
+6、单词间距
+	word-spacing:
+			normal			默认
+			px,em,rem...	固定距离间距
+			inherit			从父级继承
+			
+		英文单词之间的空白距离
+		对中文无效
+
+7、字符间距
+	letter-spacing
+			normal			默认
+			px,em,rem...	固定距离间距
+			inherit			从父级继承
+			
+		字符间的空白距离
+		对中文有效
+		
+8、长单词换行
+	word-wrap:
+			normal			默认，只在允许的断字点换行
+			break-word		允许在长单词或URL地址内部进行换行，中文没有任何问题，英文语句没问题，但是对于长串的英文就不起作用。
+			
+9、自动换行规则
+	word-break:
+			normal			默认换行规则
+			break-all		允许在单词内换行，在单词到边界时，下个字母自动换到下一行，对中文、英文都起作用
+			keep-all		只能在半角空格或连字符处换行
+			
+			
+			
+10、文本颜色
+	color:
+			颜色名字		比如：red
+			十六进制颜色	比如：#ff0000
+			rgb				比如：rgb(255,0,0)
+			inherit 		从父级继承
+			
+11、文本字体
+	font-family:
+			字体名称/字体类簇	比如：Arial,Tahoma,sans-serif,‘Microsoft YaHei’,SimSun,SimHei
+			inherit				从父级继承
+			
+		①中文页面以宋体、微软雅黑为首选
+		②英文网站以 Arial, Tahoma, sans-serif 等字体为首选
+		③定义字体时，建议使用英文，而不是采用中文定义，比如：微软雅黑-Microsoft YaHei，宋体-SimSun，黑体-SimHei
+		④设置多个字体时，不同字体之间使用逗号分隔
+		⑤对于中英结合的网站，通常使用多种字体，英文字体要定义在中文字体之前
+		⑥浏览器解读字体的方式：先查询第一个字体，如果第一个字体中没有目标文字，就去第二个字体中查询。。。，如果最后都没有，使用默认字体
+
+12、字体大小
+	font-size:
+			px,em,rem...						固定大小
+			百分比%								基于父元素字体大小
+			xx-small | x-small | small 			默认值为medium
+			medium | large | x-large |xx-large
+			smaller								比父元素更小的尺寸
+			larger								比父元素更大的尺寸
+			inherit								从父级继承
+			
+		设置字体大小应该为偶数，如果设置为奇数大小，各个浏览器都正常渲染，但是建议使用偶数
+		设置字体大小应该为整数，如果设置大小为小数，主流浏览器中会按照小数正常渲染，IE7中，会去掉小数渲染
+		网页中最小字体大小：12px		
+		浏览器默认字体大小：16px
+		
+		chrome:小于12px时，自动调整为12px；  IE、Firefox：能识别小于12px的文字，但是可读性极差，建议最小不超过12px
+		
+13、字体风格
+	font-style:
+			normal			默认值，标准样式
+			italic			斜体样式
+			oblique			倾斜样式
+			inherit 		从父级继承
+			
+		斜体样式和倾斜样式是不同的，斜体样式是指在字体中的斜体，对于没有斜体样式的文字，则没有任何效果，而倾斜样式是将当前文字倾斜，并不是字体的斜体。
+		
+14、字体粗细
+	font-weight:
+			normal			默认值
+			bold			粗体
+			bolder			更粗的字体
+			lighter			更细的字体
+			100~900			每100为一个单位，400为normal
+			inherit			从父级继承
+			
+15、字体复合样式
+	font:   font-style font-variant(很少使用，将段落设置成小型大写字母) font-weight font-size/line-height font-family
+	
+	合写时，必须设置font-size 和 font-family 两个属性的属性值，否则不会生效
+	
+	实际开发时，更倾向于分开设置字体的各种属性。
+	
+16、网络字体
+	@font-face {
+		font-family: '字体名称';
+		src: local('本地字体名称'), url('字体在服务器上的路径') format('字体格式');
+	}
+	
+	src:
+		local: 字体的本地名，当用户本地已经下载了同样的字体时，可以节约从网上下载的成本
+		url: 当浏览器在本地没有找到这种字体，那么会将url中设置的字体加载到页面中
+			
+	format：
+		可选参数，提示该资源URL所引用的字体格式
+		
+		格式				后缀名
+		truetype			.ttf
+		opentype			.ttf, .oft
+		truetype-aat		.ttf
+		embedded-opentype	.eot
+		svg					.svg, .svgz
+		woff				.woff
+
+	由于各个浏览器对不同字体格式的支持程度有所不同，在书写时就要设置多种字体格式，一般情况下，设置的格式为：
+		truetype、woff、svg、embedded-opentype
+		
+	比如：
+		@font-face {
+			font-family: 'STXINGKA',
+			src: 	local('STXINGKA'), 
+					url('STXINGKA.ttf') 	format('truetype'),
+					url('STXINGKA.woff') 	format('woff'),
+					url('STXINGKA.eot') 	format('embedded-opentype'),
+					url('STXINGKA.svg') 	format('svg');
+		}
+	
+17、创建自己的字库
+	使用 fontmin 生成精简的字体库，内容少，字体库小，下载时占用网络时间短
+	
+	fontmin可以使用客户端，也可以使用node模块实时生成字体。  http://efe.baidu.com/blog/fontmin-getting-started/
+	
+	客户端使用：
+		1、打开软件		
+		2、输入需要使用特殊字体的文字，不要换行  
+		3、打开系统字体库，选择特殊字体，将特殊字体拖拽到软件左下角，生成。
+	
+	
+18、将icon图标转为特殊字体
+		iconfont在线下载
+
+		问题：	
+			1、safari、chrome下可能被加粗
+				-webkit-font-smoothing: antialliased
+				
+			2、IE7右侧出现小方格
+				display:block
+				
+			3、在chrome下出现严重锯齿
+				-webkit-text-stroke-width: 0.2px;

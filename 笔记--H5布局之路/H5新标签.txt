@@ -1,0 +1,53 @@
+1、新增结构元素
+
+	header			页眉
+	hgroup			网页标题组合
+	nav				导航
+	section			文档中间区段
+	article			文章
+	aside			文章侧边栏
+	figure			一组媒体对象以及文字
+	figcaption		figure的标题
+	time			日期和时间
+	footer			页脚
+	
+2、其他新增元素
+	
+	video			视频
+	audio			音频
+	embed			插入各种多媒体
+	mark			突出、高亮文本
+	progress		JS中耗费的函数的进程
+	canvas			画布
+	command			命令按钮
+	details			详细信息
+	wbr				软换行
+	
+3、新增结构标签示例
+
+	<div class="wrap">
+		<header></header>
+		<nav></nav>
+		<section>
+			<header></header>
+			<article></article>
+			<footer></footer>
+		</section>
+		<aside></aside>
+		<footer></footer>
+	</div>
+	
+4、低版本浏览器兼容H5新元素
+
+	①使用JS动态创建自定义元素，之后使用CSS，为每个结构元素赋以‘块元素属性’
+	②使用插件 html5shiv.js
+	
+5、新增表单元素的主要属性
+
+	新增表单元素在表单那一节的笔记中。
+	
+	placeholder：占位符
+	autofocus：自动聚焦
+	hidden：隐藏
+	
+

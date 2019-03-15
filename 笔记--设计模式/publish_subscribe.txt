@@ -1,0 +1,36 @@
+
+pubsub={
+	
+	event1:[ function1, function2, function3... ],
+	event2:[ function1, function2, function3... ],
+	event3:[ function1, function2, function3... ],
+	...
+}
+
+pubsub.publish = function(eventname, arguments){
+	if( !pubsub[eventname] ) return false;
+	
+	while( publish[eventname].length-- ){
+		publish[eventname][length]( arguments );
+	}
+}
+
+pubsub.subscribe = function(eventname, function){
+	if( !pubsub[eventname] ) pubsub[eventName] = [];
+	
+	publish[eventname].push(function);
+}
+
+pubsub.unsubscribe = function(function){
+	
+	for(var event in pubsub){
+		if( pubsub[event] ){
+			for( var i = 0, j = pubsub[event].length; i < j; j++ ){
+				if( pubsub[event][i] === function ){
+					pubsub[event].splice(i,1);
+					return function;
+				}
+			}
+		}
+	}
+}

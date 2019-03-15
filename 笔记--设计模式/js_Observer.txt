@@ -1,0 +1,50 @@
+
+Observer:
+	function ObserverList(){
+		this.observerList = [];	
+	}
+
+	ObserverList.prototype.Add = function(obj){
+		return this.observerList.push(obj);
+	}
+
+	ObserverList.prototype.RemoveIndexAt = function(index){
+		return this.observerList.splice(index,1);
+	}
+	
+	ObserverList.prototype.Count = function(){
+		return this.observerList.length;
+	}
+
+	ObserverList.prototype.Get = function(index){
+		return this.observerList[index];
+	}
+
+
+	function Subject(){
+		this.observers = new ObserverList();
+	}
+
+	Subject.prototype.AddObserver = function(observer){
+		this.observers.Add(observer);	
+	}
+	
+	Subject.prototype.RemoveObserver = function(observer){
+		this.observers.RemoveIndexAt(this.observers.indexOf(observer));	
+	}
+
+	Subject.prototype.Notify = function(context){
+		var observerCount = this.observers.Count();
+
+		for(var i = 0; i < observerCount; i++){
+			this.observers.get(i).update(context);
+		}	
+	}
+
+
+	function Observer(){
+		this.update = function(){
+			//.....
+		}
+	}
+

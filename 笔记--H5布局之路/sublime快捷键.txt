@@ -1,0 +1,11 @@
+tab 缩进
+shift tab 反向缩进
+ctrl / 注释
+ctrl l 选择当前行
+ctrl g 定位行号
+ctrl f 查找
+ctrl h 替换
+shift ctrl 上/下 移动代码位置
+shift ctrl [ 折叠代码
+shift ctrl ] 打开折叠
+alt 数字 打开第几个选项卡文件

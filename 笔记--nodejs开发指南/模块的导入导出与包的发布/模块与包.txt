@@ -1,0 +1,81 @@
+
+
+	1、nodejs中导出模块时：
+
+			除了exports.http = function(){}这样的写法可行之外
+
+			不能使用 exports = {};这样的写法
+			只能使用 module.exports = {}; 这样的写法
+
+			因为exports实际上只是一个和module.exports指向同一个对象的变量：
+				exports = module.exports = {}; 此时他们的指向是相同的，使用exports.http = {};时也是给同一个对象设置了属性。
+
+			而当直接给 exports赋值的时候，就相当于：
+				exports = {};
+				module.exports = {};
+				这两个变量的指向就不一样了，
+				而真正导出的是module.exports指向的那个对象，当模块结束后，这个exports指向的对象会被销毁，而module.exports指向的对象才会被其他模块引用，所以直接给exports赋值，别的模块引用时会是空的module.exports。
+
+	2、nodejs在调用某个包时，会首先检查包中package.json中的main字段，将其作为包的接口。
+
+		如果package.json或者main字段不存在，会尝试寻找index.js或index.node作为包的接口。如果两个都不存在，这个包的接口就不存在，require包时就会报错。
+
+		npm全局安装和本地安装的区别：
+
+			全局安装：会被注册到PATH环境变量中，可以在命令行中直接运行包的命令，不能通过require使用，require不到；
+
+			本地安装：不会被注册到PATH环境变量中，可以通过require使用。
+
+					如果要把某个包作为工程运行时的一部分时，通过本地模式安装；
+					如果要在命令行下使用，则使用全局安装。
+
+			创建全局链接（npm link 不支持windows）： eg: npm link express ./node_modules/express -> /usr/local/lib/node_modules/express 可以将全局包当做本地包使用
+			也可以在package.json所在的包目录中运行npm link 命令，将本地包链接到全局，可以将我们自己的开发包链接到全局进行测试。
+
+	3、包的发布：
+
+			使用 npm init 命令进行交互式应答产生一个符合标准的package.json；
+
+			在发布前使用 npm adduser根据提示输入用户名、密码、邮箱，等待账号创建完成（填写username时，需要在用户名前加上一个 ~，否则会报错）;
+
+			账号创建完成后可以使用 npm whoami 检验是否取得了账号；
+
+			最后在package.json所在目录下运行 npm publish 就可以完成包的发布(如果发布时报错，原因很可能是你的包名和别人的冲突了，改一下package.json中的name不要和别人重复就可以)；
+
+			发布完成后，打开http://search.npmjs.org/(好像不能访问，可以直接进入npm官网登录:http://www.npmjs.com)就可以找到刚刚发布的包（通过报名搜索或者install）;
+
+			如果包将来有更新，只需要修改包后，更改package.json中的version字段，然后再次npm publish就可以了；
+
+			如果对发布的包不满意，可以使用 npm unpublish --force 命令来取消发布。
+
+
+	４、模块和包
+
+		*模块是 Node.js 应用程序的基本组成部分,文件和模块是一一对应的。换言之,一个Node.js 文件就是一个模块,这个文件可能是 JavaScript 代码、JSON 或者编译过的 C/C++ 扩展。
+
+		*Node.js 提供了 exports 和 require 两个对象,其中 exports 是模块公开的接口, require 用于从外部获取一个模块的接口,即所获取模块的 exports 对象。
+
+		*包是在模块基础上更深一步的抽象,Node.js 的包类似于 C/C++ 的函数库或者 Java/.Net的类库。它将某个独立的功能封装起来,用于发布、更新、依赖管理和版本控制。
+
+		＊Node.js 根据 CommonJS 规范实现了包机制,开发了 npm来解决包的发布和获取需求。Node.js 的包是一个目录,其中包含一个 JSON 格式的包说明文件 package.json。
+
+		＊严格符合 CommonJS 规范的包应该具备以下特征:
+			 package.json 必须在包的顶层目录下;
+			 二进制文件应该在 bin 目录下;
+			 JavaScript 代码应该在 lib 目录下;
+			 文档应该在 doc 目录下;
+			 单元测试应该在 test 目录下。
+
+		＊Node.js 对包的要求并没有这么严格,只要顶层目录下有 package.json,并符合一些规范即可。当然为了提高兼容性,我们还是建议你在制作包的时候,严格遵守 CommonJS 规范。
+
+		＊package.json 是 CommonJS 规定的用来描述包的文件,完全符合规范的 package.json 文件应该含有以下字段：
+			 name :包的名称,必须是唯一的,由小写英文字母、数字和下划线组成,不能包含空格。
+			 description :包的简要说明。
+			 version :符合语义化版本识别 规范的版本字符串。
+			 keywords :关键字数组,通常用于搜索。
+			 maintainers :维护者数组,每个元素要包含 name 、 email (可选)、 web (可选)字段。
+			 contributors :贡献者数组,格式与 maintainers 相同。包的作者应该是贡献者数组的第一个元素。
+			 bugs :提交bug的地址,可以是网址或者电子邮件地址。
+			 licenses :许可证数组,每个元素要包含 type (许可证的名称)和 url (链接到许可证文本的地址)字段。
+			 repositories :仓库托管地址数组,每个元素要包含 type (仓库的类型,如 git )、url (仓库的地址)和 path (相对于仓库的路径,可选)字段。
+			 dependencies :包的依赖,一个关联数组,由包名称和版本号组成。

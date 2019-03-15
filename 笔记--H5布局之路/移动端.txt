@@ -1,0 +1,373 @@
+1、自适应布局编写方法：
+	
+	“横向百分比、纵向rem”
+	
+2、开发移动端的基本流程
+
+	搭建开发环境
+		↓
+	视口重置
+		↓
+	选用标签(考虑使用HTML5新标签)
+		↓
+	书写样式(考虑使用CSS3新样式)
+		↓
+	以px为单位书写页面
+		↓
+	使用百分比和rem替换px
+		↓
+	使用JS控制HTML的字体大小
+		↓
+	借助框架进行代码优化
+	
+3、移动端调试
+
+	可以使用浏览器进行测试，但是一定要使用各种真机进行调试
+	
+	真机调试时，使用电脑上的WAMP服务器在线调试，将手机与电脑连接到同一局域网，ipconfig，手机浏览器输入IP访问
+	
+4、视口
+
+	视口的像素指CSS像素
+	
+	视口大小决定页面布局的可用宽度
+	
+	各个移动端通过viewport(视口)把自己冒充成更宽的屏幕，大多数移动浏览器默认把布局视口的宽度设为980px，然后尽可能放大可见视口，以便在屏幕中显示完整的网站
+	
+	iPad 和 winphone 的视口数值为 1024
+	
+	iPhone 的视口数值为 980
+	
+	大部分安卓机的视口数值为 980
+	
+5、设置视口
+
+	① <meta name="viewport" content="width=device-width,initial-scale=0.5" />
+	② @viewport { width: 320px; zoom: 0.5; } //支持不多，开发时不适用
+	
+6、viewport标签属性
+
+	①viewport元标签以及属性
+	
+		width						设定布局视口宽度，单位为px
+		height						设定布局视口高度，单位为px
+		initial-scale				设定页面初始缩放比例(0~10.0)
+		user-scalable				设定用户是否可以缩放(yes/no)
+		minimum-scale				设定最小缩小比例(0~10.0)
+		maximum-sacle				设定最大缩小比例(1~10.0)
+		target-densitydpi*			设定目标屏幕的dpi
+		
+	②@viewport规则的属性
+	
+		width						设置布局视口宽度(min/max-width)
+		height						设置布局视口高度(min/max-height)
+		zoom						设定页面初始缩放比例(auto、0~10.0、%)
+		user-zoom					设定用户是否可以缩放(zoom/fixed)
+		min-zoom					设定最小缩小比例(auto、0~10.0、%)
+		max-zoom					设定最大缩小比例(auto、0~10.0、%)
+		orientation					设定页面显示方向(auto、portrait、landscape)
+	
+	
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	
+	<!--  width 设置viewport宽度，为一个正整数，不带单位，默认是px，或字符串'device-width'，device-width为可见视口宽度，也就大概是手机屏幕宽度	-->
+	<!--  height		设置viewport高度，不带单位，默认是px，一般设置了宽度，会自动解析出高度，可以不用设置 -->
+	<!--  initial-scale	默认缩放比例，为一个数字，0-10，可以带小数  		-->
+	<!--  minimum-scale	允许用户最小缩放比例，为一个数字，0-10，可以带小数  -->
+	<!--  maximum-scale	允许用户最大缩放比例，为一个数字，0-10，可以带小数  -->
+	<!--  user-scalable	是否允许手动缩放，值为 yes | no  					-->
+	
+	
+	较常用的一种视口设置：
+	
+		<meta name="viewport" content="width=device-width, user-scalable=no" />
+		
+7、盒模型单位的选择
+
+	桌面端：px使用较多，涉及响应式、自适应等布局时会考虑百分比
+	移动端：百分比、em、rem等相对单位使用较多，px使用较少
+	
+		padding、margin等单位使用百分比单位，百分比是以父元素的宽度为准的，父级如果为块元素且没有设置宽度，其宽度为行宽，也就是默认宽
+		border无法设置百分比
+		line-height 设置百分比，是针对em进行的
+		
+8、CSS3新增度量单位
+
+	① ch 		字符0的宽度
+	② rem 		根元素HTML元素的font-size
+	③ vw		viewport width，视框宽度，1vw等于视窗宽度的1%
+	④ vh		viewport height，视框高度，1vh等于视窗高度的1%
+	⑤ vmin		vw 和 vh 中较小的那个
+	
+	vw、vh、vmin等兼容性不乐观
+	
+9、字体处理
+
+	要保证320px下、字体最小为12px，其他视口宽度按比例调整字体大小，比如1080px视口，字体大小为1080*12/320=40.5，由于字体必须为整数、不能为奇数，所以在1080设计图中，字体大小应当为 42px
+	
+	网络字体使用更加频繁
+	
+10、背景图处理
+
+	由于容器大小并不是固定不变的，在不同设备中背景图的尺寸也并不相同，因此必须使用 CSS3的 background-size对背景图进行适配处理。
+	
+	切图时应按照设计图‘最大尺寸’进行切图，这样在其他分辨率中也只会缩小，不会放大，也就不会模糊。
+	
+11、分辨率自适应页面开发的步骤
+
+	①查看设计图、确定需要兼容的分辨率
+	
+	②调整视口
+	
+	③确定设计图最小字体
+	
+	④按照设计图的像素进行开发
+	
+	⑤使用百分比、rem替换px
+	
+	⑥使用JS控制基准字体
+	
+		当前分辨率基准字体 = 最大分辨率下的基准字体 / 最大分辨率 * 当前页面分辨率
+		
+		JS控制基准字体：
+		$(function(){
+			$(window).resize(infinite);
+			
+			function infinite(){
+				var htmlWidth = $('html').width();
+				
+				if( htmlWidth >= 1080 ) {
+					$('html').css({
+						'font-size': '42px'
+					});
+				} else {
+					$('html').css({
+						'font-size': 42/1080*htmlWidth + 'px'
+					});
+				}
+			}
+			infinite();
+		});
+			
+		
+		上述代码基于 zepto.js框架，下载地址：http://zeptojs.com  、 https://github.com/madrobby/zepto
+		
+
+		
+
+		
+		
+12、响应式布局
+			
+	简而言之，是一个网站能够兼容多个终端（手机、iPad、计算机）的布局方法，而不需要为每个终端书写一套特定版本的代码。
+	
+	2010年5月，被Ethan Marcotte提出
+	2012年，开始流行
+	2013年，响应式WEB设计年
+	
+	优势：
+			多终端视觉和操作体验风格统一
+			兼容当前以及未来新设备
+			响应式WEB设计中的大部分技术可以用在WEBAPP中
+			节约了开发成本，维护成本也降低很多
+			
+	劣势：
+			IE8等低版本浏览器存在兼容问题
+			移动带宽流量有一定问题，因为代码量较大，所以流量较大
+			代码累赘，会出现隐藏无用的元素，加载时间加长
+			兼容各种设备工作量大
+			
+	核心技术：
+			①通过meta调整视口
+			②通过媒体查询，为不同设备加载相应样式
+			③相对单位替换绝对单位
+			
+	样式的书写顺序：
+			先书写基准样式（各个视图宽度的共同样式）
+			在书写移动端样式
+			pad版样式
+			最后书写桌面网站样式
+			
+13、媒体查询	CSS3 media query
+
+	主要作用是：根据网页的具体条件，告知浏览器如何为指定的视图宽度渲染页面
+	
+	媒体查询是一些逻辑表达式，用于计算用户浏览器中媒体特性的当前值，如果媒体查询表达式计算的结果为true，则应用其所包含的CSS规则
+	
+	表达式： @media 设备类型 and (设备特性) and (设备特性) and (设备特性)... {样式代码}
+	
+	①有条件的应用样式
+	
+		<style>
+			@media all add (min-width:500px) {...}
+			@media (orientation: portrait) 			//纵屏状态
+		</style>
+		
+	②有条件的加载样式
+
+		<link rel="stylesheet" href="./wide.css" media="screen and (min-width:1024px)" />
+		<link rel="stylesheet" href="./mobile.css" media="screen and (max-width: 320px)" />
+		
+	③设备类型
+		
+		all				所有设备
+		screen			电脑显示器
+		print			打印用纸或打印预览视图
+		handheld		便携设备
+		tv				电视机类型的设备
+		speech			语音和音频合成器
+		braille			盲人用点字法触觉回馈设备
+		embossed		盲文打印机
+		projection		各种投影设备
+		tty				使用固定密度字母栅格的媒介，比如电传打字机和终端
+		
+	④设备特性
+	
+		特性			可指定值						是否允许使用min/max前缀			特性说明
+		
+		width			带单位的长度数值，如：400px			yes						浏览器窗口的宽度
+		
+		height			带单位的长度数值，如：200px			yes						浏览器窗口的高度
+		
+		device-width	带单位的长度数值，如：400px			yes						设备屏幕宽度
+		
+		device-height	带单位的长度数值，如：200px			yes						设备屏幕高度
+		
+		orientation		portrait、landscape中的一个			no						浏览器窗口的方向是纵向还是横向，当窗口的
+																					高度值大于等于宽度值时(竖屏)，该特性值为protrait,
+																					否则为 landscape(横屏)
+																					
+		aspect-ratio	比例值，如：16/9					yes						浏览器窗口的宽高比，比例值为浏览器窗口的 宽度值 / 高度值
+		
+		device-aspect-ratio	比例值，如：16/9				yes						屏幕宽高比，比例值为屏幕分辨率的 宽度值 / 高度值
+		
+		resolution		分辨率值，如：300dpi				yes						设备的分辨率（设备像素密度，dpi:每英寸的像素）
+		
+		color			整数值								yes						设备使用多少位的颜色值，如果不是彩色设备，其值为0
+		
+		color-index		整数值								yes						色彩表中的色彩数
+		
+		monochrome		整数值								yes						单色帧缓冲器中每像素的字节数
+		
+		scan			progressive、interlace中的一个		no						电视机类型设备的扫描方式。progressive：逐行扫描，interlace：隔行扫描
+		
+		grid			0、1中的一个						no						设备是基于栅格还是基于位图。栅格：1，位图：0
+		
+		device-pixel-radio	正数值 							yes						设备像素比（设备像素 / CSS像素）(某一方向上)
+		
+	⑤and、not、only
+	
+		and：使用and关键字来指定当某种设备类型的某种特性的值满足某个条件时所使用的样式。
+		
+		not：not关键字表示对后面的表达式执行取反操作。如果浏览器不满足设置的参数,则应用样式
+		
+		only：让那些不支持Media Queries 但是能够读取Media Type的设备的浏览器将表达式中的样式隐藏起来。对于不支持Media Queries的浏览器（比如IE8之前的浏览器）来说，无论是否有only ，都将忽略这个样式。
+		
+	⑥例子：
+		
+		1、<link  href="****.css"  rel="stylesheet"  media="(only) screen and ( max-device-width:320px) and (orientation:portrait)">
+
+		2、@media (only) screen and ( max-device-width:320px) and (orientation:portrait){
+			h1{
+				background:red;
+			}
+		}
+		
+		3、@media not handheld and (width:420px) {
+			h1{
+				background:red;
+			}
+		}
+			
+		4、@media all and (not width:420px) {
+			h1{
+				background:red;
+			}
+		}
+	
+14、像素
+	
+	物理像素：手机屏幕实际像素，是固定的
+		
+	独立物理像素：也就是CSS像素，能够独立进行像素控制的虚拟单位
+		
+	物理像素点的个数在一个设备上是固定不变的，CSS也就是独立物理像素是可以进行缩小放大的，它只是一个虚拟的，实际不存在的单位，一个独立物理像素可以包含多个物理像素，一个物理像素也可以包含多个独立物理像素，区别就在于独立物理像素是否缩小
+		
+		
+		比如：	iPhone5   	物理像素 320    独立物理像素 320 
+				iPhone6		物理像素 640    独立物理像素 320
+					
+		正常状态下，一个CSS像素对应一个物理像素，但是在移动端，缩放是常有的事   *****
+				
+			比如：屏幕宽度320物理像素640，也就是网页宽度640，如果一个320的网页放在上面就只占四分之一的面积，所以一般将网页宽度(视口大小)调整为320，改善效果，也就是将CSS像素调整为320，原本是640和物理像素一样。
+			
+	屏幕像素比：物理像素 / 独立物理像素
+
+15、按照高清分辨率解读
+		
+		(1)flexible.js ----淘宝团队
+		
+			方法： 	视口大小为屏幕物理宽度
+			
+					根据设计图、实际屏幕宽度，调整基准字体
+					
+					根据不同设备像素比，调整不同缩放比例
+					
+			原理：	获取到‘设备物理宽度’ 和 ‘设备像素比例’ ，计算出物理像素，也就是‘设备可用布局宽度’
+					
+					设置初始缩放比例为  1 / 设备像素比例
+					
+			操作：	
+					修改代码：
+					
+					function refreshRem(){
+					
+						var width = docEl.geeBoundingClientRect().width;
+							
+						if( width / dpr > 960 ) {			//dpr:设备缩放比例
+							width = 960 * dpr;
+						}
+						
+						var rem = width / (960 / 36);
+						
+						docEl.style.fontSize = rem + 'px';
+						
+						flexible.rem = win.rem = rem;
+					}
+			
+			下载：	https://github.com/amfe/lib-flexible
+			
+			注意事项：	开发时要手动添加关于视口的meta信息
+			
+		(2)MetaHandler.js --- 网易开发团队
+		
+			原理：	使用固定像素开发，检测加载网页的设备宽度，根据固定像素宽与设备宽，计算视口缩放比例
+			
+			使用步骤：	按照兼容的最大分辨率，使用像素单位进行页面的基本书写
+			
+						在页面顶部添加meta，将width设置为PSD图实际宽度，也就是最大分辨率，但是不要设置缩放值
+						
+						修改MetaHandler.js文件最后的代码：给opt.fixViewportWidth();传入参数为最大分辨率宽度
+						
+			下载：	https://github.com/unbug/generator-webappstarter/blob/master/app/templates/app/src/util/MetaHandler.js
+
+16、移动端兼容
+
+	①CSS3媒体查询兼容问题
+	
+		IE8浏览器不支持CSS3媒体查询，可以使用css3-media-queries.js 或 respond.js 为IE添加Media Query支持
+		
+		下载地址：
+		
+			css3-media-queries.js： https://github.com/livingston/css3-mediaqueries.js
+			
+			respond.js：https://github.com/scottjehl/Respond
+			
+	②HTML与CSS基本兼容问题
+	
+		iPhone上页面的数字识别为电话号码：添加 <meta name="format - detection" content="telephone = no" />
+		
+		取消电子邮箱识别：添加 <meta name="format - detection" content="email = no" />
+		
+	
+		

@@ -1,0 +1,195 @@
+
+    events是Node.js最重要的模块，没有“之一”！
+
+    原因是Node.js本身架构就是事件式的，而它提供了为一个接口，所以堪称Node.js事件编程的基石。
+
+    events模块不仅用于用户代码与Node.js下层事件循环的交互，还几乎被所以的模块依赖！
+
+1、events模块只提供了一个对象：
+
+        events.EventEmitter 对象
+
+    EventEmitter 的核心： 事件发射 与 事件监听功能。
+
+    EventEmitter的方法：
+
+        1、EventEmitter.on( event, listener ) : 为指定事件注册一个监听器， 接受一个字符串 event， 和一个回调函数listener。
+
+        2、EventEmitter.emit(event, [arg1], [arg2], [...]) ：发射event事件，传递若干可选参数到事件监听器的参数表。
+
+        3、EventEmitter.once( event, listener ) ：为指定事件注册一个单次监听器，也就是监听器最多只会被触发一次，触发后立刻解除该监听器。
+
+        4、EventEmitter.removeListener( event, listener ) ：移除指定事件的某个监听器，listener必须是该事件已经注册过的监听器。
+
+        5、EventEmitter.removeAllListeners( [event] ) ：移除所有事件的所有监听器，如果指定event，则移除指定事件的所有监听器。
+
+    例子：
+        var EventEmitter = require('events').EventEmitter;
+        var event = new EventEmitter();
+        event.on( 'some-one', function(){
+            console.log('some-one');
+        } );
+
+        setTimeout(function(){
+            event.emit('some-one');
+        }, 1000);
+
+    自己实现：
+
+        let events = function(){
+            this.handers = [];
+        }
+        events.prototype.on = function( eventName, hander ){
+            //不仅事件名要在里面，而且事件名的值不能为null
+            if( !(eventName in this.handers) || !this.handers[eventName] ){
+                this.handers[eventName] = [];
+            }
+
+            this.handers[eventName].push(hander);
+            return this;
+        };
+        events.prototype.emit = function(eventName) {
+            let handers = this.handers[eventName];
+            if( !handers ) return this;
+            let args = Array.prototype.slice.call( arguments, 1 );
+            let popIndex = [];
+
+            //将once为true的方法的索引放在popIndex中，最后删除
+            //为啥不直接删除？ forEach的原理其实和for in 循环是一样的，i一直++，所以，当你删除一个元素时，如果想要循环过程继续下去，就需要让 for in 的那个 i 减去 1，但是forEach并不能手动减去一个长度，所以需要存储起来，最后再想办法删除
+            handers.forEach( function( hander ){
+                hander.call( this, args);
+                if(hander.once == true){
+                    hander.once == null;
+                    popIndex.push(handers.indexOf(hander));
+                }
+            } );
+
+            //原本的索引数组是正向，也就是从小到大的，现在将索引数组反向，从大到小取值，就不会对后面的索引位置造成影响
+            popIndex.reverse().forEach(function(index){
+                handers.splice(index, 1);
+            });
+            //或者：
+            // for (let index of popIndex.reverse()) {
+            //     handers.splice(index, 1);
+            // }
+
+            return this;
+        };
+
+        events.prototype.once =  function( eventName, hander ){
+            hander.once = true;
+            if( !(eventName in this.handers) )  this.handers[eventName] = [];
+
+            this.handers[eventName].push(hander);
+            return this;
+        };
+
+        events.prototype.removeListener = function( eventName, hander ){
+            let handers = this.handers[eventName];
+            if( !handers ) { return this; }
+
+            let index = handers.indexOf(hander);
+            if( index != -1 ) return handers.splice(index, 1);
+            if( !handers )    handers = null;
+            return this;
+        }
+
+        events.prototype.removeAllListeners = function( eventName ){
+            eventName ? this.handers[eventName] = null : this.handers = [];
+            return this;
+        }
+
+
+        let event = new events();
+
+        let hander1 = (data) => console.log('hander1' + data);
+        let hander2 = (data) => console.log('hander2' + data);
+        let hander3 = (data) => console.log('hander3' + data);
+
+        let once1 = () => console.log('once1');
+        let once2 = () => console.log('once2');
+        let once3 = () => console.log('once3');
+
+        // event.removeAllListeners('hander');
+        event.on( 'hander', hander1 );
+        event.on( 'hander', hander2 );
+        event.on( 'hander', hander3 );
+        // event.removeAllListeners('hander');
+        event.once( 'once', once1 );
+        event.once( 'once', once2 );
+        event.once( 'once', once3 );
+
+        event.emit('hander', 'this is hander');
+        event.emit('hander', 'this is hander');
+        event.emit('once');
+        event.emit('once');
+
+        event.removeListener('hander', hander1);
+        event.emit('hander', 'this is hander');
+        event.emit('once');
+
+        event.removeAllListeners('hander');
+        event.emit('hander', 'this is hander');
+
+       /*
+        *    hander1this is hander
+        *    hander2this is hander
+        *    hander3this is hander
+        *    hander1this is hander
+        *    hander2this is hander
+        *    hander3this is hander
+        *    once1
+        *    once2
+        *    once3
+        *    hander2this is hander
+        *    hander3this is hander
+        */
+
+2、error事件
+
+    EventEmitter定义了一个特殊的事件error，它包含了“错误”的含义，我们在遇到异常的时候通常会发射error事件。
+
+    当error被发射时，EventEmitter规定如果没有响应的监听器,Node.js会把它当作异常，退出程序并打印调用栈。
+
+    我们一般要为会发射error事件的对象设置监听器，避免遇到错误后崩溃。
+
+    var events = require('events');
+    var emitter = new events.EventEmitter();
+    emitter.emit('error');
+    /*  events.js:173
+        throw err; // Unhandled 'error' event
+            ^
+
+        Error [ERR_UNHANDLED_ERROR]: Unhandled error.
+            at EventEmitter.emit (events.js:171:17)
+            at Object.<anonymous> (/home/bwhite/Desktop/node-dome/nodejs核心模块/events.error.js:3:9)
+            at Module._compile (internal/modules/cjs/loader.js:702:30)
+            at Object.Module._extensions..js (internal/modules/cjs/loader.js:713:10)
+            at Module.load (internal/modules/cjs/loader.js:612:32)
+            at tryModuleLoad (internal/modules/cjs/loader.js:551:12)
+            at Function.Module._load (internal/modules/cjs/loader.js:543:3)
+            at Function.Module.runMain (internal/modules/cjs/loader.js:744:10)
+            at startup (internal/bootstrap/node.js:238:19)
+            at bootstrapNodeJSCore (internal/bootstrap/node.js:572:3)
+    */
+
+
+
+    var events = require('events');
+    var emitter = new events.EventEmitter();
+    emitter.on('error', function(){
+        console.log('哎呀，出错啦');
+    });
+    emitter.emit('error');
+    //哎呀，出错啦
+
+
+    ！！！！！nodejs中文社区：！！！！
+        程序运行错误其实跟EventEmitter的error事件没有任何关系。在 Node.js 中，你只能通过try catch来捕获一个异常，而如果这个异常没有被捕获到，就会触发process的uncaughtException事件抛而如果你没有注册该事件的监听器（即该事件没有被处理），则 Node.js 会在控制台打印该异常的堆栈信息，并结束进程。
+
+
+3、大多时候我们不会直接使用EventEmitter，而是在对象中继承它。包括fs、net、http在内的，只要是支持事件响应的核心模块都是EventEmitter的子类。
+
+    为什么这样做？
+        一、具体某个实体功能实现事件符合语义，事件的监听和发射应该是一个对象的方法。
+        二、JS的对象机制是基于原型的，支持部分多重继承，继承EventEmitter不会打乱对象原有的继承关系。

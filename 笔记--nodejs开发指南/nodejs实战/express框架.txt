@@ -1,0 +1,139 @@
+
+    express是Node.js官方推荐的唯一一个Web开发框架。
+
+    express除了为http模块提供了更高层的接口外，还实现了：
+        路由控制
+        模板解析支持
+        动态视图
+        用户会话
+        CSRF保护
+        静态文件服务
+        错误控制器
+        访问日志
+        缓存
+        插件支持
+
+    使用express进行post提取的例子：
+        var express = require('express');
+        var app = express.createServer();
+        app.use(express.bodyParser());
+        app.all('/', function(req, res){
+            res.send(req.body.title + req.body.text);
+        });
+        app.listen(3000);
+
+    安装express： npm install -g express
+
+    使用express快速创建项目：
+        express -t microblog  //创建出microblog目录  jade模板引擎
+        express -e microblog  //创建出microblog目录  ejs模板引擎
+
+    进入microblog 并 npm install，检查当前目录下的package.json，自动安装所有指定的依赖，此时这个项目会自动安装 ejs　和　express等等 。
+
+    ejs：一个标签替换引擎，易于学习，express默认提供的引擎是jade，功能强大但不易于学习。
+
+    https://blog.csdn.net/jian_xi/article/details/73523194
+
+
+
+
+
+    express支持ＲＥＳＴ风格的请求方式。
+    ＲＥＳＴ：表征状态转移，representational state transfer，是一种基于HTTP协议的网络应用的接口风格。
+
+    ＨＴＴＰ协议的８种标准方法：
+        GET                 请求获取指定资源
+        HEAD                请求指定资源的响应头
+        POST                向指定资源提交数据
+        PUT                 请求服务器存储一个资源
+        DELETE              请求服务器删除指定资源
+        TRACE               回显服务器收到的请求，主要用于测试或诊断
+        CONNECT             ＨＴＴＰ/1.1协议中预留给能够将连接改为管道方式的代理服务器
+        OPTIONS             返回服务器支持的ＨＴＴＰ请求方法
+
+    我们常用的是　GET、POST、PUT、DELETE方法。这几种方法通常用于实现以下功能：
+        GET     获取          请求不会对资源产生变动；　重复请求多次与一次请求的效果是一样的
+        POST    新增          请求会对资源产生变动；　重复请求多次与一次请求的效果是不一样的
+        PUT     更新          请求会对资源产生变动；　重复请求多次与一次请求的效果是一样的
+        DELETE  删除          请求会对资源产生变动；　重复请求多次与一次请求的效果是一样的
+
+    Express支持的HTTP请求的绑定函数：
+      　请求方式              　   绑定函数
+        GET                 app.get(path, callback)
+        POST                app.post(path, callback)
+        PUT                 app.put(path, callback)
+        DELETE              app.delete(path, callback)
+        TRACE               app.trace(path, callback)
+        CONNECT             app.connect(path, callback)
+        OPTIONS             app.options(path, callback)
+        PATCH               app.patch(path, callback)       //后来新增的HTTP方法，功能是部分更新某个资源
+        所有方法              app.all(path, callback)
+
+    app.get()函数表示为某个路径绑定了GET请求，向这个路径发起其他方式的请求不会被响应。其他同理。
+
+    app.all()函数支持把所有的请求方式绑定到同一个响应函数。
+
+
+模板引擎：　是一个从页面模板根据一定的规则生成ＨＴＭＬ的工具。
+
+    ＰＨＰ堪称是最早的模板引擎的雏形。它是让代码嵌入在ＨＴＭＬ中执行，以产生动态的页面。而ＡＳＰ、ＪＳＰ都沿用了这个模式。
+    按照这种模式，整个网站就由一个个的页面模板组成，所有的逻辑都嵌入到模板中。
+    这种模式一开始很受欢迎，但随着规模的扩大它会遇到很多问题，比如：
+        页面功能逻辑与页面布局样式耦合，网站规模变大以后逐渐难以维护
+        语法复杂，技术门槛较高
+        功能过于全面，页面设计者可以在页面上编程，不利于功能划分，也使模板解析效率过低
+    这些问题制约了早期模板引擎的发展，直到ＭＶＣ开发模式普及，模板引擎才开始遍地开花。
+
+    现代的模板引擎是ＭＶＣ的一部分，在功能划分上它严格属于视图部分，因此功能以生成ＨＴＭＬ页面为核心，不会引入过多的编程语言的功能。
+
+    模板引擎的功能：将页面模板和要显示的数据结合起来生成ＨＴＭＬ页面。
+
+    模板引擎既可以运行在服务器端，也可以运行在客户端，大多时候它都在服务器端直接被解析为ＨＴＭＬ，解析完成后再发送到客户端。
+
+    在ＭＶＣ架构中，模板引擎包含在服务器端。控制器得到用户请求后，从模型获取数据，调用模板引擎。模板引擎以数据和页面模板为输入，生成ＨＴＭＬ页面，返回给控制器，由控制器交回客户端。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- index模板 -->
+    <!-- title是 routes/index.js　中为 index 模板传入的对象属性 -->
+    <!-- ejs模板变量的值只能是存在的值，如果为空，会报错，倒是可以做运算 -->
+
+    <!-- ejs的标签系统： -->
+        <!-- ① <% code %>        javascript代码,可以使用js语句，比如循环、判断、、、、 -->
+        <!-- ② <%= code %>       显示替换过HTML特殊字符的内容 ，也就是将数据中的标签当做普通字符串，不进行解析-->
+        <!-- ③ <%- code %>       显示原始html，也就是会对数据中的标签进行解析 -->
+
+        视图助手中的函数使用时不能使用　①　这种表示方法，应该使用　②　的写法，也就是说数据一般使用　②③，逻辑判断之类的使用　①
+
+
+    <!-- 由于express4.0没提供 layout.ejs，所以我们不用再去使用它，可以使用 #include，　就像php中导入片段一样 -->
+
+    <!-- 片段视图(就像ng2里面的 *ngFor)：ｅｍｍｍｍｍ ，partial用不了了，只能用和php类似的语法-->
+
+
+    //视图助手,ｅｍｍｍｍ, helpers用不了了。。。
+    //expres使用下面的方式：
+        //静态视图助手
+        app.locals.appName = 'microblog';
+        app.locals.sayHello = function(){
+            return 'welcome microblog';
+        }
+        //动态视图助手
+        app.use(function(req, res, next){
+            res.locals.appUrl = req.url;
+            res.locals.welcome = function(){
+                return 'welcome emmmmm'
+            }
+            next();
+        });

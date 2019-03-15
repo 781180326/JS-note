@@ -1,0 +1,57 @@
+ <!DOCTYPE html>
+ <html>
+ <head>
+ 	<title></title>
+ 	<script>
+ 		function weekTemps(){
+ 			this.dataStore = [];
+ 			this.add = add;
+ 			this.average = average;
+ 		}
+ 		function add(week,temp){
+ 			if(this.dataStore[week-1]){
+ 				this.dataStore[week-1].push(temp);
+ 			}else{
+ 				this.dataStore[week-1] = [];
+ 				this.dataStore[week-1].push(temp);
+ 			}
+ 		}
+ 		function average(){
+ 			var i=0;
+ 			this.dataStore.forEach(function(a){
+ 				a.forEach(function(a){
+ 					i++;
+ 				});
+ 			});
+ 			return this.dataStore.map(function(a){
+ 				return a.reduce(function(a,b){
+ 					return a+b;});
+ 			}).reduce(function(a,b){return a+b;})/i;
+ 		}
+
+ 		var mou = new weekTemps();
+ 		mou.add(1,35);
+ 		mou.add(1,36);
+ 		mou.add(1,35);
+ 		mou.add(1,36);
+ 		mou.add(1,35);
+ 		mou.add(1,36);
+ 		mou.add(2,35);
+ 		mou.add(2,36);
+ 		mou.add(2,35);
+ 		mou.add(3,36);
+ 		mou.add(3,35);
+ 		mou.add(3,36);
+ 		mou.add(4,35);
+ 		mou.add(4,36);
+ 		alert(mou.dataStore[0]);
+ 		alert(mou.average());
+ 		alert(7*35.5*2);
+ 	</script>
+ </head>
+ <body>
+ 
+ </body>
+ </html>
+
+ 

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>数据结构——栈(后入先出)</title>
+	<meta charset="utf-8">
+	<script>
+	function Strack(){
+		this.top = 0;
+		this.dataStore = [];
+		this.push = push;
+		this.pop = pop;
+		this.peek = peek;
+		this.clear = clear;
+		this.length = length;
+	}
+	function push(element){
+		this.dataStore[this.top++] = element;
+	}
+	function pop(){
+		return this.dataStore[--this.top];
+	}
+	function peek(){
+		return this.dataStore[this.top-1];
+	}
+	function clear(){
+		this.top = 0;
+	}
+	function length(){
+		return this.top;
+	}
+
+	//进制转换
+	function mulBase(num,base){
+		var s = new Strack();
+		do{
+			s.push(num % base);
+			num = Math.floor(num /= base);
+		}while(num>0);
+		var converted = '';
+		while(s.length()>0){
+			converted += s.pop();
+		}
+		return converted;
+	}
+
+	console.log(mulBase(32,2));
+
+	//回文
+	function isPalindrome(word){
+		var s = new Strack();
+		for(var i=0; i<word.length; i++){
+			s.push(word[i]);
+		}
+		var rword = '';
+		while(s.length() > 0){
+			rword += s.pop();
+		}
+		if( word == rword){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	console.log(isPalindrome("word"));
+	console.log(isPalindrome("3223"));
+
+	//用栈模拟递归 阶乘
+	function fact(n){
+		var s = new Strack();
+		while(n > 1){
+			s.push(n--);
+		}
+		var product = 1;
+		while(s.length() > 0){
+			product *= s.pop();
+		}
+		return product;
+	}
+	console.log(fact(100));
+
+
+	//课后练习1、写一个函数，参数为表达式，判断算数表达式中的括号是否匹配，返回括号缺失的位置
+
+
+
+	//课后练习2、用两个栈，一个栈存储操作数，一个栈存储操作符，设计一个函数，传入一个算数表达式，将中缀表达式转换为后缀表达式，然后利用栈对后缀表达式求值
+	</script>
+</head>
+<body>
+
+</body>
+</html>

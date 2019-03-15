@@ -1,0 +1,26 @@
+1、内容溢出处理
+	overflow:		
+			visible		默认，内容不被修剪
+			hidden		超出隐藏
+			scroll		显示滚动条，滚动条一直存在
+			auto		超出时显示滚动条
+			inherit		从父级继承
+	x,y方向分写：
+		overflow-x:...;
+		overflow-y:...;
+		
+2、单行文本超出显示省略号
+	p{
+		width: 400px;
+		height: 40px;
+		line-height: 40px;
+		overflow: hidden;
+		text-overflow: ellipsis;	//超出显示省略号，必须和 overflow:hidden 一块使用
+		word-break: keep-all;		//不换行
+		white-space: nowrap;		//不换行
+	}
+
+3、多行文本超出显示省略号
+	①后台直接截取文字的一部分，后面加上省略号，发送到前端
+	②后台全部发送过来，前端通过js截取一部分加上省略号放在对应元素中
+	

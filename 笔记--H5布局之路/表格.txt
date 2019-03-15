@@ -1,0 +1,108 @@
+1、表格元素
+	
+	table		定义一个表格
+	caption		定义表格标题
+	thead		定义表格头部
+	tbody		定义表格主体
+	tfoot		定义表格尾部
+	col			定义表格列
+	colgroup	定义表格列组
+	tr			定义表格行
+	td			定义表格单元格
+	th			定义表格表头单元格（列标题）
+	
+	
+	
+	col 元素 可以嵌套与 colgroup 元素当中，也可以单独使用。
+	使用colgroup 时必须配合col 元素，否则无效。
+	
+	caption不是必须的。
+	
+	thead、tbody、tfoot元素非必须写。
+	
+	thead、tbody、tfoot在书写时，顺序是可以任意更换的，浏览器会读取标签名，然后将标签‘智能的’放在合适的位置。
+	
+	thead、tbody、tfoot元素在表格中可以不止有一个。
+	
+2、表格嵌套规则
+
+	table 下只能直接包含 caption、thead、tbody、tfoot、col、colgroup元素；
+	thead、tbody、tfoot 下可以直接包含 tr ；
+	tr下可包含 td 或 th;
+	th 通常出现在 thead 的 tr 标签中。
+	
+3、rowspan & colspan
+	
+	th 和 td 的属性。
+	属性值为数字，表示合并的 行数或列数。
+	rowspan 表示 行合并。
+	colspan 表示 列合并。
+	
+	设置合并时，为‘需合并单元格’的左上方第一个单元格设置 rowspan 或 colspan属性， 其他行和列则直接删除掉多余的td和th元素。
+	
+4、基本数据表的实现思路
+
+	①确定是否需要table实现功能需求
+	②拆分数据表的结构组成
+	③构思数据是否有必要划分‘列’	（col、colgroup）
+	④确定行数以及每行的单元格个数
+	⑤查看是否需要合并（rowspan、colspan）
+	
+5、colgroup和col
+
+	比如：
+		<colgroup>
+			<col span="1" class="col1">
+			<col span="3" class="col2">
+			<col span="1" class="col3">
+		</colgroup>
+		
+		span属性值表示包含几列数据。
+		将五列数据分为三种类型，每个类型对应一列或几列数据，然后通过每种类型的类名为每个类型设置样式。
+		
+6、table自身属性
+
+		width：定义数据表宽度，可以直接写数字，不用加px
+		height：定义数据表高度，可以直接写数字，不用加px
+		border：定义表格边框的宽度，值为0时隐藏边框，值为数字，不加px
+		cellpadding：单元格与边框之间的距离
+		cellspacing：单元格与单元格之间的距离
+		
+		
+		设置宽度和高度以后，各个单元格会按照‘单元格内容大小’来‘瓜分’table的所有宽度和高度。
+		
+		如果当前设置的宽高小于内容的宽高，表格会自动忽略设置的宽度或高度。
+		
+		控制每列宽度：
+			①为第一行的每一列的单元格各设置样式，赋予宽度，此后每列都会按照这个宽度渲染
+			②通过col和colgroup来进行分组，并为每组各设置一个样式，赋予宽度
+			
+7、table的CSS样式属性
+		
+		①合并单元格之间的边框-----border-collapse
+				separate			默认值，边框被分开
+				collapse			合并为单一边框
+				inherit				从父级继承
+			
+		②边框之间的空隙--------border-spacing（所以在设置这个值时，不要合并单元格间的空隙）
+				lengh length  		规定相邻单元之间的距离。单位为px、em等，不允许负值。
+									如果定义一个值，则代表水平垂直间距；
+									如果定义两个值，第一个代表水平间距，第二个代表垂直间距。
+				inherit				从父级继承
+				
+		③空白单元格---------empty-cells
+				hide				不再空白单元格周围绘制边框
+				show				默认值，在空白单元格周围绘制边框
+				inherit				从父级继承
+				
+8、表格属性与样式的选用
+
+		①以CSS为主
+		②不为table设置 width、height、border属性，使用CSS实现宽高、边框样式
+		③使用表格前清除默认样式 
+					border-collapse：collapse；		//合并单元格空隙
+					border-spacing：0；				//不留边框空隙
+		
+		
+			
+		

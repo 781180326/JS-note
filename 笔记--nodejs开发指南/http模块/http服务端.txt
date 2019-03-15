@@ -1,0 +1,179 @@
+    Nodejs标准库提供了http模块，其中封装了一个高效的http服务器和一个简易的http客户端。
+
+    http服务器：http.Server
+    http客户端: http.request
+
+http服务器
+
+    var http = require('http');
+
+    http.createServer( function( req, res ){
+        res.writeHead(200, {'Content-type': 'text/html'});
+        res.write('<h1>node.js</h1>');
+        res.end('<p>hello world</p>');
+    } ).listen(3000);
+
+    console.log('http server is listening at port 3000');
+
+    以上代码创建了一个http.Server的实例，回调函数为http请求处理函数，这个函数中的两个参数，第一个req是请求对象,第二个res是响应对象。
+
+    res.writeHead显示写入响应代码200，指定了响应头。
+    res.write写入响应体
+    res.end写入响应体，然后结束响应写入并发送
+
+一、http.Server对象实体的方法：
+    1、server.close([callback])
+    停止服务端接收新的连接。详见 net.Server.close()。
+
+    2、server.listen()
+    开启HTTP服务器监听连接。方法与net.Server的server.listen()相同。
+
+    3、server.listening
+    返回一个布尔值，表示服务器是否正在监听连接。
+
+    4、server.maxHeadersCount(number)
+    <number> 默认为 2000。
+    限制请求头的最大数量，默认为 2000。 如果设为 0，则没有限制。
+
+    5、server.setTimeout([msecs][, callback])
+    msecs <number> 默认为 120000 (2 分钟)。
+    callback <Function>
+    设置 socket 的超时时间。 如果发生超时，则触发服务器对象的 'timeout' 事件，并传入 socket 作为一个参数。
+    默认情况下，服务器的超时时间是 2 分钟，且超时后的 socket 会被自动销毁。 但是，如果你为服务器的 'timeout' 事件分配了一个回调函数，则超时必须被显式地处理。
+    返回 server。
+
+    6、server.timeout(number)
+    <number> 超时时间，以毫秒为单位。默认为 120000 (2 分钟)。
+    socket 被认定为超时的空闲毫秒数。
+    值设为 0 可禁用请求连接的超时行为。
+    注意，socket 的超时逻辑是在连接上设定的，所以改变这个值只影响服务器新建的连接，而不会影响任何已存在的连接
+
+    7、server.keepAliveTimeout(number)
+    <number> 超时毫秒. 默认为 5000 (5秒).
+    服务器完成最后的响应之后需要等待的额外的传入数据的活跃毫秒数, socket 才能被销毁.   如果服务器在 keep-alive 计时已激活时接收到新的数据, 他会重置常规的非活动计时, 即server.timeout.
+
+    值为 0 时禁用传入连接 keep-alive 的超时行为。 A value of 0 makes the http server behave similarly to Node.js versions prior to 8.0.0, which did not have a keep-alive timeout.
+
+    注意: scoket 的超时逻辑上取决于服务器连接, 所以改变这个值只影响服务器的新连接, 不影响任何已存在的连接.
+
+二、http.Server的事件
+
+    http.Server是一个基于事件的http服务器。所有的请求都被封装为独立的事件。
+
+    继承自EventEmitter。只需对它的事件编写响应函数即可实现http服务器的所有功能。
+
+    提供的基本常用事件：
+
+        request： 客户端请求到来时触发。触发时提供两个参数 req和res，分别是 http.ServerRequest 和 http.ServerResponse 的实例，表示请求信息和响应信息
+
+        connection：当TCP连接建立时触发。触发时提供一个参数 socket，为net.socket的实例。
+
+        close：服务器关闭时触发。并不是用户连接断开，是服务器关闭。
+
+        其他事件见nodejs中文网文档。
+
+        最常用的事件就是request，因此http提供了一个捷径：http.createServer([requestListener])，功能是创建一个http服务器并将requestListener作为request事件的监听函数。
+
+        eg:
+            var http = require('http');
+
+            http.createServer( function( req, res ){
+                res.writeHead(200, {'Content-type': 'text/html'});
+                res.write('<h1>node.js</h1>');
+                res.end('<p>hello world</p>');
+            } ).listen(3000);
+
+            console.log('http server is listening at port 3000');
+
+            而事实上它的实现是这样的：
+
+                var http= require（‘http’);
+
+                var server = new http.Server();
+
+                server.on('request', function(req, res) {
+                    res.writeHead(200, {'Content-type': 'text/html'});
+                    res.write('<h1>node.js</h1>');
+                    res.end('<p>hello world</p>');
+                });
+
+                server.listen(3000);
+
+三、http.ServerRequest对象
+
+    http.ServerRequest是HTTP请求的信息，是后端最关注的内容。
+
+    一般由http.Server的request事件发送，所谓第一个参数传递，通常简称requset或req。
+
+    1、http.ServerRequest的属性：
+        complete            客户端请求是否已经发送完成
+        httpVersion         http协议版本，通常是1.0或1.1
+        method              http请求方法，如GET、POST、PUT、DELETE等
+        url                 原始的请求路径
+        headers             http请求头
+        trailers            http请求尾(不常见)
+        connection          当前http连接套接字，为net.socket的实例
+        socket              connection属性的别名
+        client              client属性的别名
+
+    2、http.ServerRequest的事件：
+        data                当请求体数据到来时触发。触发时提供一个参数 chunk，表示接收到的数据。如果该事件没有被监听，那么请求体将会被抛弃。该事件可能会被调用多次(请求提数据可能一次传送不完，每次传一点)。
+        end                 当请求体数据传输完成时触发，此后不会再有数据到来。如果客户端没有执行end()方法，服务器会自动判断是否传输完成，根据响应时间。
+        close               用户当前请求结束时触发，不同于end，如果用户强制终止传输，也会调用close。
+
+    3、获取GET请求内容：
+        var http = require('http');
+        var url = require('url');
+        var util = require('util');
+
+        http.createServer( function( req, res ){
+            res.writeHead(200, {'Content-type':'text/html'});
+            res.end(util.inspect(url.parse(req.url, true)));
+        } ).listen(3000);
+
+        // Url { protocol: null,
+        // slashes: null,
+        // auth: null,
+        // host: null,
+        // port: null,
+        // hostname: null,
+        // hash: null,
+        // search: '?a=b&b=a',
+        // query: { a: 'b', b: 'a' },
+        // pathname: '/sadsad/aa',
+        // path: '/sadsad/aa?a=b&b=a',
+        // href: '/sadsad/aa?a=b&b=a' }
+
+        通过url.parse()，原始的path被解析为一个对象，其中query是GET的请求内容，pathname是路径。
+
+    4、获取POST请求内容
+        Node.js默认不会解析请求提体，因为等待请求体传输可能是一件非常耗时的工作。当你需要的时候，需要手动来做。
+
+        var http = require('http');
+        var querystring = require('querystring');
+        var util = require('util');
+
+        http.createServer( function(req, res){
+            var post = '';
+            req.on(data, function(chunk){
+                post += chunk;
+            });
+            req.on( 'end', function(){
+                post = querystring.parse(post);
+                res.end(util.inspect(post))
+            } )
+        } ).listen(3000);
+
+        不要在真正的生产环境中使用这种简单的方法获取POST请求，它有严重的效率和安全问题。比如字符编码不匹配就需要一些方式去适配。
+
+四、http.ServerResponse对象
+
+        http.ServerResponse是返回给客户端的消息，决定了用户最终能看到的结果，它也是由http.Server的request事件发送的，作为第二个参数传递，一般简称response或res。
+
+        1、http.ServerResponse重要的三个成员函数：
+
+            ①response.writeHead(satusCode, [headers]) ：向请求的客户端发送响应头。 statusCode是HTTP状态码，如200、404等。headers是一个类似关联数组的对象，表示响应头的每个属性。该函数在一个请求内最多调用一次，如果不调用，则会自动生成一个响应头。
+
+            ②response.write(data, [encoding]) ：向请求的客户端发送响应内容，data是一个Buffer或字符串，表示要发送的内容。如果data是字符串，则需要制定encoding来说明其编码方式，默认是utf-8。在response.end()被调用之前，response.write()可以被调用多次。
+
+            ③response.end(data, [encoding]) ：结束响应，告知客户端所有发送已经完成。当所有要返回的内容发送完毕的时候，该方法必须被调用一次。如果不调用，客户端将永远处于等待状态。它接收的参数与response.write()方法相同。

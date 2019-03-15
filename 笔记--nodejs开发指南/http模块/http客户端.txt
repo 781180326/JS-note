@@ -1,0 +1,140 @@
+
+    http模块提供了两个函数http.request 和 http.get,功能是作为客户端向http服务器发起请求。
+
+1、http.request(option, callback)
+
+    发起http请求，接收两个参数， option是一个对象，表示请求的参数，callback是请求的回调函数。
+
+        option常用参数：
+            host：请求网站的域名会IP地址
+            port：请求网站的端口
+            method:请求方法，默认是GET
+            path：请求的相对于根的路径，默认是'/'。querystring应包含在内，例如:'/search?query=byvoid'
+            headers：一个对象，为请求头的内容
+
+        callback传递一个参数，为http.ClientResponse的实例
+
+        返回值是一个http.ClientRequest的实例，代表一个正在执行中的http请求。
+
+    eg：
+        var http =require('http');
+        var querystring = require('querystring');
+
+        var contents = querystring.stringify({
+            name: 'bwhite',
+            email: 'bwhite@qq.com',
+            address: 'xust'
+        });
+
+        var options = {
+            host: 'http://localhost',
+            port: '3000',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': contents.length
+            }
+        };
+
+        var req = http.request( options, function(res){
+            res.setEncoding('utf8'),
+            res.on('data', function(data){
+                console.log(data);
+            })
+        } );
+
+        req.write(contents);
+        req.end();
+
+        //{ name: 'bwhite', email: 'bwhite@qq.com', address: 'xust' }
+
+        //(根据实验，我猜测，不执行req.end()，服务器依旧会收到消息，它代表的是正在执行的一个请求信息发送完毕，服务器会根据消息发送的时间自动end,但是，强烈建议执行此方法) -----不要忘了通过 req.end()结束请求，否则服务器不会收到信息 ×      ！！！
+
+2、http.get( options, callback );
+
+    发送GET请求。是http.request的简化版，唯一的区别在于 http.get自动将请求方法设置为GET请求，同时 不需要手动调用 req.end()。
+
+    eg:
+        var http = require('http');
+
+        var options = {
+            host: 'localhost',
+            port: 3000,
+            path: '/search?query=byvoid',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': contents.length
+            }
+        };
+
+        var req = http.get(options, function(res){
+            res.setEncoding('utf8');
+            res.on('data', function(data){
+                console.log(data);
+            })
+        });
+
+3、http.ClientRequest
+
+    由http.request 或 http.get产生返回的对象，表示一个已经产生并且正在进行中的http请求。
+
+    提供一个response事件， 即 http.request 或 http.get 第二个参数指定的回调函数的绑定对象。
+
+    所以显式的绑定就是：
+        var http =require('http');
+        var querystring = require('querystring');
+        var contents = querystring.stringify({
+            name: 'bwhite',
+            email: 'bwhite@qq.com',
+            address: 'xust'
+        });
+        var options = {
+            host: 'http://localhost',
+            port: '3000',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': contents.length
+            }
+        };
+
+        var req = http.request( options );
+        req.write(contents);
+        req.end();
+
+        req.on( 'response', function(res){
+            res.setEncoding('utf8'),
+            res.on('data', function(data){
+                console.log(data);
+            })
+        } );
+
+
+    http.ClientRequest 像 http.ServerResponse 一样也提供了 write 和 end 函数，用于向服务器发送请求体，通常用于POST、PUT等操作！！！
+
+    所以写结束后必须调用 end 函数以通知服务器，否则请求无效。。。(不见得。。。做实验)
+
+    http.ClientRequest 的常见函数：
+        req.absort() ：终止正在进行的请求
+        req.setTimeout( time, [callback] )　：设置请求超时时间，time为毫秒。当请求超时后，callback被调用
+
+        具体见Node.js文档
+
+４、http.ClientResponse
+
+    与http.ServerRequest　类似，提供了三个事件data、end、close，分别在数据到达、传输结束、连接结束时触发，其中data传递一个参数chunk，表示接收到的数据。
+
+    http.ClientResponse的属性，用于表示请求的结果：
+
+        statusCode             http状态码
+        httpVersion             http协议的版本
+        headers                 http响应头
+        trailers                http响应尾
+
+    http.ClientResponse的方法：
+
+        res.setEncoding([encoding])     设置默认的编码，当data事件被触发时，数据将会以encoding编码。默认是null，即不编码，以Buffer形式存储。常用编码是 utf8，并不是utf-8。
+
+        res.pause()                     暂停接收数据和发送事件，方便实现下载功能。
+
+        res.resume()                    从暂停状态恢复。

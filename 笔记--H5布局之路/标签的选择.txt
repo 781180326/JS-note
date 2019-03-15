@@ -1,0 +1,69 @@
+1、影响标签选择的因素主要有：
+	①标签默认样式
+	②标签嵌套层数
+	③标签语义性
+	④标签的扩展性
+	⑤样式的可控性
+	⑥特殊功能需要
+	
+2、display的取值：
+	none
+	block					html、body、iframe、title、form、fieldest、legend、div、h1~h6、p、dl、dt、dd、ul、ol、hr...
+	inline					span、a、img、abbr、acronym、b、code、em、i、strong、select、button、label、textarea、object....
+	inline-block			input、option、optgroup...
+	list-item				li
+	run-in				
+	table					table
+	inline-table		
+	table-header-group		thead
+	table-footer-group		tfoot
+	table-row-group			tbody
+	table-row				tr
+	table-column-group		colgroup
+	table-column			col
+	table-cell				td、th
+	table-caption			caption
+	inherit
+
+3、块和行
+	块：
+		1、独占一行
+		2、支持所有样式
+		3、不设宽度时，宽度充满整行
+
+	内嵌：
+		1、可以在一行显示
+		2、不支持宽高，对上下的margin和padding等样式支持也有问题
+		3、宽度内容撑开
+		4、代码换行（回车）会被解析，会产生空格，空格大小由body的字体大小和字体样式控制，因为换行在body中发生
+
+	inline-block：
+		1、块元素能在一行显示
+		2、内联元素支持宽高
+		3、没有宽度时，内容撑开宽高
+		4、标签之间的换行间隙被解析（问题）
+		5、IE6、7不支持 块 标签的inline-block（问题）
+
+	块和内联元素的转换：
+		display：block；显示为块
+		display：inline；显示为内联
+		display：inline-block；显示为内联块，即支持宽高，又能在同一行显示
+
+4、将img设置为display:block; 使得img标签下面的3-5个像素的空隙去掉。
+
+5、display:none;和visibility:hidden;的区别：
+	display:none; 不占物理空间
+	visibility:hidden; 视觉上看不见但是依旧占据物理空间
+	
+6、标签嵌套规则：
+	(1)块元素可以包含块元素和行元素
+	(2)行元素可以包含行元素，但不能包含块元素 
+	(3)标题、段落类的块元素(h1~h6、dt、p)不能包含块元素 ***
+	(4)ins和del这两个行元素可以包含块元素
+	(5)dl下只能直接包含dt和dd元素
+	(6)ul、ol下只能直接包含li元素
+	(7)table下只能直接包含caption、thead、tbody、tfoot、col、colgroup
+	(8)thead、tbody、tfoot下直接包含tr，tr下可以是th和td。通常th出现在thead的tr中
+	
+7、错误的嵌套：
+	在h1~h6中嵌套h1~h6元素: 浏览器会解析错误，里面的h1~h6会被解析到父级的同级，其后面的同级元素也会紧随该子元素，被解析到外面。其他标签不会被错误解析，但是不建议这样做。

@@ -1,0 +1,21 @@
+#! /bin/bash
+DAEMON="/usr/local/mongodb/bin/mongod -dbpath /data/db"
+NAME=mongodb
+DESC=mongodb
+PIDFILE="/usr/local/mongodb/mongodbpid"
+
+case "$1" in
+    start)
+        echo "Starting $DESC:"
+            nohup $DAEMON > /dev/null &
+        echo $! > $PIDFILE
+            ;;
+    stop)
+        echo "Stopping $DESC: "
+            PID=$(cat $PIDFILE)
+        kill $PID
+            rm $PIDFILE
+            ;;
+esac
+
+exit 0

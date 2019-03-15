@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>数据结构——字典</title>
+	<meta charset="utf-8">
+	<script>
+	function dictionary(){
+		var datastore = new Array();
+
+		function add(key,value){
+			datastore[key] = value;
+		}
+		function find(key){
+			return datastore[key];
+		}
+		function remove(key){
+			delete datastore[key];
+		}
+		function showAll(){
+			var arr = Object.keys(datastore).sort();
+			for(var i = 0; i<arr.length; i++){
+				console.log(arr[i] + ":"+datastore[arr[i]]);
+			}
+		}
+		function count(){
+			var n = 0;
+			for(var key in datastore){
+				++n;
+			}
+			return n;
+		}
+		function removeAll(){
+			datastore = [];
+		}
+
+		return {
+		add : add,
+		remove : remove,
+		find : find,
+		showAll : showAll,
+		count : count,
+		removeAll : removeAll
+		};
+	}
+
+	var pbook = dictionary();
+	pbook.add("baibin","18700025479");
+	pbook.add("yangmiao","18392869698");
+	pbook.add("dad","15229402924");
+	pbook.showAll();
+
+	console.log(pbook.find("baibin"));
+	pbook.remove("baibin");
+	pbook.showAll();
+	
+	console.log(pbook.count());
+	pbook.removeAll();
+	pbook.showAll();
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,401 @@
+简单工厂模式：
+	另外通过一个类来生成实例。
+复杂工厂模式：
+	使用子类来决定一个成员变量应该是哪个具体的类的实例。
+
+	
+简单工厂模式的例子：
+	var BicycleShop = function ( ) { };
+	BicycleShop.prototype = {
+		constructor : BicycleShop,
+		
+		sellBicycle : function (model){
+			var bicycle = 	BicycleFactory.createBicycle( model );
+			
+			bicycle.assemble();
+			bicycle.wash();
+			
+			return bicycle;
+		}
+	};
+	
+	//Bicycle接口
+	var Bicycle = new Interface( 'Bicycle', [ 'assemble', 'wash', 'ride', 'repair']; );
+		
+	//Speedster自行车
+	var Speedster = function() {
+			...
+	}
+	Speedster.prototype = {
+		constructor : Speedster,
+			
+		assemble : function( ){
+				...
+		},
+		wash : function( ) {
+				...
+		},
+		ride : function( ) {
+				...
+		},
+		repair : function( ) {
+				...
+		}
+	}
+	//Lowrider自行车
+		...
+	//ComfortCruiser自行车
+		...
+		
+	//工厂对象
+	var BicycleFactory = {
+		createrBicycle : function(model){
+			var bicycle;
+			switch( model ){
+				case 'The Speedster' : 
+					bicycle = new Speedster();
+					breake;
+				case ' The Lowrider ' :
+					bicycle = new Lowrider();
+					breake;
+				case ' The Comfort Cruiser ' :
+				default : 
+					bycicle = new ComfortCruiser();
+			}
+				
+			Interface.ensureImplements( bicycle, Bicycle );
+			return bicycle;
+		}
+	}
+		
+	//这里BicycleFactory就是一个简单工厂。这种模式把成员对象的创建工作转交给一个外部对象。这个外部对象可以是一个简单的命名空间，也可以是一个类的实例。
+		
+如果需要提供几种不同品牌的自行车：
+工厂模式：
+	var BicycleShop = function( ) {};
+	BicycleShop.prototype = {
+		constructor : Bicycle,
+		
+		sellBicycle : function ( model ){
+			var bicycle = this.createBicycle( model );
+			
+			bicycle.assemble();
+			bicycle.wash();
+			
+			return bicycle;
+		},
+		
+		createBicycle : function( model ) {
+			throw new Error( "unsupported operation on an abstract class." );
+		}
+	}
+	//现在BicycleShop是一个抽象类，不能被实例化，只能用来派生子类。现在使用createBicycle方法会抛出一个错误，需要子类重新定义此方法。
+	
+	//现在来构建子类品牌
+	var AcmeBicycleShop = function() { };
+	extend( AcmebicycleShop, BicycleShop );
+	AcmeBicycleShop.prototype.createBicycle = function( model ) {
+		var bicycle;
+			switch( model ){
+				case 'The Speedster' : 
+					bicycle = new Speedster();
+					breake;
+				case ' The Lowrider ' :
+					bicycle = new Lowrider();
+					breake;
+				case ' The Comfort Cruiser ' :
+				default : 
+					bycicle = new ComfortCruiser();
+			}
+				
+			Interface.ensureImplements( bicycle, Bicycle );
+			return bicycle;
+	}
+	
+	
+	var GeneralBicycleShop = function() { };
+	extend( GeneralBicycleShop, BicycleShop );
+	GeneralBicycleShop.prototype.createBicycle = function( model ) {
+		var bicycle;
+			switch( model ){
+				case 'The Speedster' : 
+					bicycle = new Speedster();
+					breake;
+				case ' The Lowrider ' :
+					bicycle = new Lowrider();
+					breake;
+				case ' The Comfort Cruiser ' :
+				default : 
+					bycicle = new ComfortCruiser();
+			}
+				
+			Interface.ensureImplements( bicycle, Bicycle );
+			return bicycle;
+	}
+	
+	这些工厂方法生成的对象（Speedster/Lowrider/ComfortCuriser）都实现了Bicycle接口，所以在其他代码眼里，完全可以互换。
+	自行车的销售工作还是和以前一样，只是现在所开的商店可以是Acme或Gneeral自行车专卖店：
+		var alecsCrusers = new AcmeBicycleShop();
+		var yourNewBicycle =alecsCrusers.sellBicycle( 'The  lowrider' );
+		
+		var bobsCrusers = new GeneralBicycleShop();
+		var yourSecondNewBike = bobsCrusers.sellBicycle('The lowrider');
+		
+	工厂模式的适用场合：
+		1、动态实现：
+			如果需要使用一些不同方式实现同一接口的对象，那么可以使用一个工厂方法或者简单工厂对象来简化选择实现的过程。
+		2、节省设置开销：
+			如果对象需要进行发杂并且彼此相干的设置，那么使用工厂模式可以减少每种对象所需的代码量。
+			如果所用的类要求加载外部库的话，这尤其有用。工厂方法可以对这些库进行检查并动态加载那些未找到的库。这些代码只存在一个地方，因此以后修改起来也会方便的多。
+		3、用许多小型对象组成一个大对象
+	
+	示例：XHR工厂
+		/*如果代码中需要多次执行Ajax请求，那么明智的做法是把创建这种对象的代码提取到一个类中，并创建一个包装器来包装在实际发起请求时所要经历的一系列步骤*/
+		
+		var SimpleHandler = function(){};
+		SimpleHandler.prototype = {
+			request: function( method, url, callback, postVars ){
+				var xhr = this.createXhrObject ();
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState !== 4) return;
+					(xhr.status === 200) ? 
+					callback.success( xhr.responseText, xhr.responseXML ) :
+					callback.failure( xhr.status );					
+				};
+				xhr.open(method, url, true);
+				if(method !== "POST") postVars = null;
+				xhr.send( postVars );
+			},
+			createXhrObject: function(){
+				var methods = [
+					function() {return new XMLHttpRequest(); },
+					function() {return new ActiveXObject('Msxml2.XMLHTTP');},
+					function() {return new ActiveXObject('Microsoft.XMLHTTP');}
+				];
+				
+				for( var i = 0, len = methods.length; i < len; i++ ) {
+					try {
+						methods[i]();
+					}catch( e ){
+						continue;
+					}
+					this.createXhrObject = methods[i];
+					return methods[i];
+				}
+				
+				throw new Error( 'SimpleHandler: Could not create an XR object.' );
+			}
+		
+		};
+		
+		//使用它：
+		var myHandle = new SimpleHandler();
+		var callback = {
+			success: function(responText,responXML){
+				alter('Success: ' + responseText);
+			},
+			failure: function(statusCode){
+				alert( 'Failure: ' + statusCode );
+			}
+		};
+		myHandle.request('GET','script.php',callback);
+		
+	使用专用型连接对象
+		创建两个处理器类。 QueueHandler会在发起新的请求之前先确保所有的请求都已经成功处理。
+		OfflineHandler会在用户处于离线状态时把请求缓存起来。
+		
+		/* QueueHandler类 */
+		var QueueHandler = function() {
+			this.queue = []; //暂时存储新的请求
+			this.requestInprogress = false; //判断是否应该将请求存入queue
+			this.retryDelay = 5; //5秒后重新发送请求
+		};
+		extend( QueueHandler, SimpleHandler );
+		
+		QueueHandler.prototype.request = function( method, url, callback, postVars, override ){
+			if( this.requestInprogress && !override ){
+				this.queue.push({
+					method : method,
+					url : url,
+					callback : callback,
+					postVars : postVars
+				});
+			} else {
+				this.requestInprogress = true;
+				var xhr = this.createXhrObject();
+				var that = this;
+				xhr.onreadystatechange = function(){
+					if( xhr.readyState !== 4 ) return;
+					if( xhr.status === 200 ){
+						callback.success( xhr.responseText, xhr.responseXML );
+						than.advanceQueue();
+					} else {
+						callback.failure( xhr.status );
+						setTimeout( function(){
+							that.request( method, url, callback, postVars, true);
+						}, that.retryDelay * 1000 );
+					}
+				};
+				xhr.open( method, url, callback );
+				if( method !== 'POST' ) postVars = null;
+				xhr.send( postVars );
+			}
+		};
+		QueueHandler.prototype.advanceQueue = function() {
+			if( this.queue.length === 0 ){
+				this.requestInProgress = false;
+				return;
+			}
+			var req = this.queue.shift();
+			this.request( req.method, req.url, req.callback, req.postVars, true );
+		}
+			
+		
+		/* OfflineHandlerde对象 */
+		
+		var OfflineHandler = function(){
+			this.storedRequests = [];
+		};
+		extend( OfflineHandler, SimpleHandler );
+		
+		OfflineHandler.prototype.request = function( method, url, callback, postVars ){
+			if( XhrManager.isOffline() ){  //如果处于离线状态
+				this.storedRequests.push({
+					method: method,
+					url: url,
+					callback: callback,
+					postVars: postVars
+				});
+			} else {
+				this.flushStoredRequests();
+				OfflineHandler.superclass.request( method, url, callback, postVars );
+			}
+		};
+		OfflineHandler.prototype.flushStoredRequests = function () {
+			for( var i = 0, len = storedRequests.length; i < len; i++ ){
+				var req = storedRequest[i];
+				OfflineHandler.superclass.request( req.method, req.url, req.callback, req.postVars );
+			};
+		};
+		
+	运用工厂模式：
+		var XhrManager = {
+			createXhrHandler : function() {
+				var xhr;
+				if( this.isOffline() ){
+					xhr = new OfflineHandler();
+					
+				}else if( this.isHignLatency() ){//判断Ajax请求是否很多
+					xhr = new QueueHandler();
+				}else{
+					xhr = new SimpleHandler();
+				}
+				
+				Interface.ensureImplements( xhr, AjaxHandler );
+				return xhr;
+			},
+			isOffline: function () {
+				return !navigator.onLine;
+			},
+			isHignLatency: function(){
+				//检查请求得到回应所经历的事件，根据其长短来决定返回true还是false
+				...
+			}
+		};
+		
+	
+	
+	
+	//RSS阅读器 ,每60秒更新一次
+	
+	var DisplayModule = new Interface( 'DisplayModule', ['append', 'remove','clear' ] );
+	
+	var ListDisplay = function( id, parent ){
+		this.list = document.createElement('ul');
+		this.list.id = id;
+		parent.appendChild( this.list );
+	};
+	ListDisplay.prototype = {
+		append: function( text ){
+			var newEl = document.createElement('li');
+			this.list.appendChild( newEl );
+			newEl.innerHTML = text;
+			return newEl;
+		},
+		remove: function(el){
+			this.list.removeChild(el);
+		},
+		clear: function(){
+			this.list.innerHTML = '';
+		}
+	};
+	
+	var conf = {
+		id: " cnn-top-stories ",
+		feedUrl: 'http://rss.cnn.com/rss/cnn_topstories.rss',
+		updateInterval: 60,
+		parent: $('feed-readers')
+	};
+	
+	var FeedReader = function(display, XhrHandler, conf){
+		this.display = display;
+		this.XhrHandler = XhrHandler;
+		this.conf = conf;
+		
+		this.startUpdates();
+	};
+	FeedReader.prototype = {
+		fetchFeed : function(){
+			var that = this;
+			var callback = {
+				success: function( text, xml ) { that.parseFeed(text, xml); },
+				failure: function(status){ that.showError(status); }
+			};
+			this.Xhrhandler.request('GET', 'feedProxy.php?feed=' + this.conf.feedUrl, callback);
+		},
+		parseFeed: function ( responseText, responseXML ){
+			this.display.clear();
+			var items = responseXML.getEementsByTagName('item');
+			for( var i = 0, len = items.length; i < len; i++ ){
+				var title = items[i].getElementsByTagName('title')[0];
+				var link = items[i].getElementsByTagName('link')[0];
+				this.display.append('<a href="'+ link.firstChild.data + '">' + title.firstChild.data + '</a>');
+			}
+		},
+		showError: function(statusCode ){
+			this.display.clear();
+			this.display.append("error fetching feed.");
+		},
+		stopUpdates: function(){
+			clearInterval( this.interval );
+		},
+		startUpdates: function(){
+			this.fetchFeed();
+			var that = this;
+			this.interval = setInterval( function() {that.fetchFeed();},
+				this.conf.updateInterval * 1000);
+		}
+	}
+	
+	工厂：
+	var FeedManager = {
+		createFeedReader: function(conf){
+			var displayModule = new ListDisplay( conf.id+'-display', conf.parent );
+			Interface.ensureImplements( displayModule, DisplayModule );
+			
+			var xhrHandler = XhrManager.createXhrHandler();
+			Interface.ensureImplements( xhrHandler, AjaxHandler );
+			
+			return  new FeedReader(displayModule, xhrHandler, conf );
+		}
+	}
+	
+	
+	工厂模式之利：
+		消除对象间的耦合，防止代码的重复。
+		将所有实例化代码集中在一个位置。
+		派生子类时有很大的灵活性。
+	工厂模式之弊：
+		如果根本不可能另外换用一个类，或者不需要在运行期间在一系列可互换的类中进行选择，那就不应该用工厂方法。大多数类最好使用new关键字和构造函数公开的进行实例化。这可以让代码更简单易读。工厂方法在其适用场合非常有用，但切勿滥用。如果拿不定主意，那就不要用，因为以后在重构代码时还有机会使用工厂模式。
+	
+		

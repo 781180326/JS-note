@@ -1,0 +1,318 @@
+1、变形 
+
+	①二维变形
+	
+		transform：translate(100px,200px) scale(1.2,2) rotate(30deg)
+		
+			rotate(val)			元素发生旋转
+			translate(val)		元素发生偏移
+			scale(val)			放大或缩小显示元素
+			skew(val)			元素扭曲/斜切
+			
+			
+			(1)rotate
+			
+				单位：			deg，度数
+				正值：			顺时针旋转
+				负值：			逆时针旋转
+				默认旋转中心：	元素中心位置
+				
+				大于360°或小于-360°时，使用此角度对360°取余，但是一旦涉及动画效果，则会真正旋转到这个度数
+				
+				rotate(0deg) 不要简写为 rotate(0)
+				
+			(2)改变旋转中心：
+			
+				transform-origin
+				
+						left、right、top、bottom、center			比如：left top
+								
+						px、em、rem...								以元素内容区左上角为基准，比如：20px 20px
+						
+						百分比										以元素宽度为基准,比如：20% 20%
+						
+						第一个值为水平方向，第二个值为垂直方向,默认为center center
+						如果只写一个参数，另一个为center
+						
+						例子：transform-origin： left top
+						
+					三维中心的改变：值变为三个
+						
+			(3)translate
+			
+				单位：			px
+				
+				两个参数，以逗号隔开：
+					第一个参数：水平方向上的偏移值
+					第二个参数：垂直方向上的偏移值
+					如果只写一个参数，则代表水平方向的偏移，垂直方向的偏移为0
+				
+				属性可以为负值
+				
+				默认向右为正方向、向下为正方向
+				
+				可以单独设置某一个方向的偏移：
+					
+					translateX(100px);
+					translateY(100px);
+					
+				例子：transform: translate(100px,200px);
+					
+			(4)scale
+				
+				单位：无
+				
+				可以为小数，1表示原始大小，小于 1 表示缩小， 大于 1 表示放大
+				
+				两个参数，以逗号隔开：		
+					第一个参数表示水平方向的缩放
+					第二个参数表示垂直方向的缩放
+					如果只写一个参数，则X、Y方向均应用该属性
+				
+				可以单独设置某一个方向的缩放：
+					
+					scaleX(100px);
+					scaleY(100px);
+				
+				可以为负值，设置负值时，左右、上下颠倒
+				
+				例子：transform: scale(0.9, 2);
+				
+			(5)skew
+			
+				单位： deg，度数
+				
+				两个参数，以逗号隔开：
+					
+					第一个参数表示水平方向的扭曲
+					第二个参数表示垂直方希的扭曲
+					如果只写一个参数，则表示水平方第二个参数为0
+					
+				可以单独设置某一个方向的扭曲：
+					
+					skewX(100px);
+					skewY(100px);
+					
+				例子：transform: skew(30deg,60deg);
+				
+		变形的顺序会对最终结果造成影响
+	
+	②三维变形
+	
+		触发方法：
+			(1) 告知浏览器变形方式
+				
+				给需要进行三维变形的元素的父级添加样式：
+					
+					-webkit-transform-style: preserve-3d;
+					
+					此时浏览器会按照三维变形的方式渲染父级以及父级内部的元素
+					
+					IE不支持三维变形
+					
+					不要为body元素设置这个样式，否则会对 position：fixed；定位的元素造成布局影响
+					
+			(2)直接使用CSS3三维变形语法
+			
+				transform: translate3d(30px,60px,20px) rotateX(30deg);
+				
+				①Z轴的位置：
+					
+					X轴向右、Y轴向下，Z轴垂直X、Y形成的平面，默认指向用户
+					
+					Z轴也会随着X、Y轴的变化而变化
+					
+				②rotate：
+					二维书写方式：
+						rotate()
+						
+					三维书写方式：
+						rotateX()
+						rotateY()
+						rotateZ()
+						rotate3d(x,y,z,angle)
+					
+					二维变形中的旋转是围绕一个 点 旋转
+					三维变形中的旋转是围绕某一个 轴 进行旋转
+					
+					rotateX：围绕 X轴 旋转
+					rotateY：围绕 Y轴 旋转
+					rotateZ：围绕 Z轴 旋转
+					rotate3d：是三种轴旋转的缩放方式，其中x，y，z均为一个数字，最后一个angle为一个角度，如：rotate3d(1,2,3,30deg)，表示 绕X轴旋转30°，绕Y轴旋转60°，绕Z轴旋转90°
+					
+				③translate：
+					二维书写方式：
+						translate()
+						translateX()
+						translateY()
+						
+					三维书写方式：
+						translateX()
+						translateY()
+						translateZ()
+						trnaslate3d(x,y,z)
+						
+					Z轴方向，垂直平面向上，也就是指向用户的方向为正
+					
+				④scale：
+					二维书写方式：
+						scale()
+						scaleX()
+						scaleY()
+						
+					三维书写方式：
+						scaleX()
+						scaleY()
+						scaleZ()
+						scale3d(x,y,z)
+						
+				⑤skew：
+					二维书写方式：
+						skew()
+						skewX()
+						skewY()
+						
+					三维书写方式：
+						skew()
+						skewX()
+						skewY()
+						
+					二维和三维并没有变化，实际开发时，使用skew()较少
+					
+				⑥视角：
+					-webkit-perspective: 数字； //注意，没有单位，纯数字
+					
+					默认情况下表示无限远。
+					0：		无限远
+					非零：	表示视角距离物体的像素值，当视角越接近物体，也就越容易变形
+					
+				⑦隐藏旋转元素背面：
+					当一个元素围绕x轴或y轴进行旋转时，就有可能出现‘显示元素背面’的情况。此时，元素的内容会透过背景显示出来，对于一些效果，不希望‘展示背面’时，内容显示出来，所以设置‘背面不可视’
+					
+					backface-visibility: hidden;
+				
+				
+	
+2、过渡
+	
+	transition：
+		
+		属性：
+				①transition-property 		过渡属性
+				
+					可以针对所有属性进行应用，也可以指定一个属性或某几个属性应用过渡效果
+					
+					针对所有属性：all
+					针对指定属性：属性名
+				
+				②transition-duration		过渡时间
+					
+					单位：s 秒，运动的总时间
+				
+				③transition-timing-function	过渡方式
+				
+					linear：		线性过渡，默认
+					ease：			平滑过渡
+					ease-in：		由慢到快
+					ease-out：		由快到慢
+					ease-in-out：	由慢到快到慢
+					
+					除了以上的过渡方式，还可以使用贝塞尔曲线指定过渡:
+						cubic-bezier(number,number,number,number)   //四个数值都需在[0,1]区间内
+					
+				④transition-delay		过度延迟时间
+				
+					单位：s 秒，过渡的延迟世间， 默认为0
+					
+		过渡合写方法：
+		
+				transition：transition-property  transition-duration  transition-timing-function  transition-delay
+							[,transition-property  transition-duration  transition-timing-function  transition-delay]...;
+							
+				例子：transition: 	width 2s linear 1s, 
+									height 3s linear 2s,
+									border-color 2s ease-in 1s，
+									background-color 3s cubic-bezier(0.25,0.5,0.6,1.0) 3s;
+									
+		过渡指从一种状态到另一种状态，因此，需要两种属性状态。
+		通常情况下，一种默认状态是存在于CSS当中的，而另一种状态以hover方式进行书写或通过JS进行动态变化。
+					
+3、动画
+
+	(1)关键帧：
+	
+		指二维动画中的角色、物体运动或变化中的关键动作所处的那一帧
+			
+		使用关键帧定义动画：
+		eg:
+			@keyframes 动画名 {
+				0% { background-color: red; }
+				50%{ background-color: blue; }
+				100%{background-color: white;}
+			}
+			
+			@keyframes 动画名 {
+				from{ background-color: red; }
+				to{ background-color: white; }
+			}
+			
+			上面的百分比或from、to所处的位置就代表了几个关键帧位置。
+			
+		注意：当使用百分比表示起始帧时，使用'0%',不能使用'0'，关键帧只认百分号
+		
+	(2)动画：
+	
+		animation
+		
+			基本属性：
+			
+				①animation-name				动画名称
+					也就是使用关键帧定义的动画名
+				
+				②animation-duration			动画时间
+					单位：s，秒
+					
+				③animation-timing-function	动画频率，过渡方式
+				
+					linear：		线性过渡，默认
+					ease：			平滑过渡
+					ease-in：		由慢到快
+					ease-out：		由快到慢
+					ease-in-out：	由慢到快到慢
+					
+					除了以上的过渡方式，还可以使用贝塞尔曲线指定过渡:
+						cubic-bezier(number,number,number,number)   //四个数值都需在[0,1]区间内
+					
+				④animation-delay				动画延迟世间
+					单位：s，秒， 默认为0
+					
+				⑤animation-iteration-count	动画循环次数
+				
+					默认不循环
+					设置数字代表循环次数
+					无限次循环：infinite
+				
+				⑥animation-direction			动画播放方向
+				
+					默认值为normal，每次播放都是向前播放
+					正反交替播放：alternate
+					
+				⑦animation-play-state		动画暂停、播放
+				
+					paused	 	暂停动画;
+					running	 	继续播放动画;
+				
+		合写方法：
+				animation：animation-name animation-duration animation-timing-function animation-delay animation-iteration-count animation-direction
+							[,animation-name animation-duration animation-timing-function animation-delay animation-iteration-count animation-direction]...;
+							
+		例子：
+			@keyframes bgRtW {
+				0% { background-color: red; }
+				50%{ background-color: blue; }
+				100%{background-color: white;}
+			}
+			
+			animation: bgRtW 5s linear 2s infinite  alternate;
+			
+			

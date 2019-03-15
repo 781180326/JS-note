@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>数据结构——列表</title>
+	<meta charset="utf-8">
+	<script>
+	var a =[1,2,3];
+	a[-1]=6;
+	alert(a);//1,2,3
+	alert(a[-1]);//6
+	alert(a[-2]);//undefined  
+	//alert(a[4]);//undefined
+
+
+
+	function Clist(){
+		this.listSize = 0;
+		this.pos = 0;
+		this.dataStore = [];
+		this.clear = clear;
+		this.find = find;
+		this.toString = toString;
+		this.insert = insert;
+		this.append = append;
+		this.remove = remove;
+		this.front = front;
+		this.end = end;
+		this.prev = prev;
+		this.next = next;
+		this.length = length;
+		this.currPos = currPos;
+		this.moveTo = moveTo;
+		this.getElement = getElement;
+		this.contains = contains;
+	}
+
+	function front(){
+		this.pos = 0;
+	}
+
+	function end(){
+		this.pos = this.listSize-1;
+	}
+
+	function prev(){
+		if(this.pos > 0){
+			--this.pos;
+		}
+	}
+
+	function next(){
+		if(this.pos<this.listSize-1){
+			++this.pos;
+		}
+	}
+
+	function currPos(){
+		return this.pos;
+	}
+
+	function moveTo(position){
+		if(position >= 0 && position <= this.listSize-1){
+			this.pos = position;
+			return true;
+		}
+		return false;
+	}
+
+	function getElement(){
+		return this.dataStore[this.pos];
+	}
+
+	function contains(element){
+		for(var i=0; i<this.dataStore.length; i++){
+			if(this.dataStore[i] == element){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function length(){
+		return this.listSize;
+	}
+
+	function clear(){
+		delete dataStore;
+		this.dataStore = [];
+		this.listSize = this.pos = 0;
+	}
+
+	function find(element){
+		for(var i=0; i<this.dataStore.length;++i){
+			if(this.dataStore[i] == element){
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	function toString(){
+		return this.dataStore;
+	}
+
+	function insert(element,after){
+		var insertPos = this.find(after);
+		if(insertPos > -1){
+			this.dataStore.splice(insertPos+1,0,element);
+			++this.listSize;
+			return true;
+		}
+		return false;
+	}
+
+	function append(element){
+		this.dataStore[this.listSize++] = element;
+	}
+
+	function remove(element){
+		var foundAt = this.find(element);
+		if(foundAt>-1){
+			this.dataStore.splice(foundAt,1);
+			--this.listSize;
+			return true;
+		}
+		return false;
+	}
+
+
+
+
+
+	//遍历列表的函数   why 有问题 ，好像死循环了
+	// function displayList(list){
+	// 	for(list.front(); list.currPos() < list.length(); list.next()){
+	// 		console.log(list.getElement());
+	// 	}
+	// }
+
+	var movies = new Clist();
+	movies.append("1、肖克申的救赎");
+	movies.append("2、哆啦A梦");
+	console.log(movies.toString());
+	console.log(movies.length());
+	console.log(movies.currPos());
+	movies.next();
+	console.log(movies.currPos());
+	//displayList(movies);
+	</script>
+</head>
+<body>
+
+</body>
+</html>

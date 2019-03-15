@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" \>
+	<title>三列布局三列自适应</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding:0;
+		}
+		body{
+			margin:0 50px;
+			text-align:center;
+		}
+		.header ,.footer{
+				
+			height:30px;
+			line-height: 30px;
+			margin:0 auto;
+			background-color:#050;
+		}
+		.container{
+			margin-top:10px;
+			margin-bottom: 10px;
+			background-color:green;
+			overflow: hidden;
+		}
+		.mainBox{
+			width:100%;
+			float:left;
+			background:#fff;
+			margin-bottom: -9999px;
+			padding-bottom: 9999px;
+		}
+		.mainBox .Content{
+			background:red;
+			margin:0 31% 0 21%;
+			
+		}
+		.sideMainBox{
+		
+			width:30%;
+			float:left;
+			margin-left:-30%;
+			background-color:black;
+			margin-bottom: -9999px;
+			padding-bottom: 9999px;
+		}
+		.sideBox{
+			
+			width:20%;
+			float:left;
+			margin-left:-100%;
+			background-color:red;
+			margin-bottom: -9999px;
+			padding-bottom: 9999px;
+		}
+
+
+	</style>
+</head>
+<body>
+	<div class="header"></div>
+	<div class="container">
+
+		<div class="mainBox">
+			<div class="Content">margin-right:210px;		
+			而如果这里设置margin的话，对于他的上一级容器是不会产生影响的，他们不会移动，因为这里的位置是限制在他的上一级容器中的，所以当次栏左移						动100%时会出现在整体的最左端 ，次栏是否移动，取决于和他 ***同一级*** 的 容器是否向左向右移动*/
+			
+			/*事实证明这里的 ' left' 和 ' right ' 是</div>
+		</div>
+		<div class="sideMainBox"></div>
+		<div class="sideBox"></div>
+
+	</div>
+	<div class="footer"></div>
+
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+阴影：
+	text-shadow:x y blur-radius color;
+	.one{
+		text-shadow:0 2px 3px #fff;	
+	}
+多重阴影：
+	.two{
+		text-shadow:
+		0 -2px 3px #fff,
+		0 -4px 3px #aaa,
+		0 -6px 6px #666,
+		0 -8px 9px #000;
+	}
+活版印刷效果：
+	.one{
+		text-shadow:0 1px 0 #777,0 -1px 0 #000;
+	}
+
+限制溢出：
+	text-overflow:clip /  ellipsis
+	clip:溢出时被截断
+	ellipsis:溢出时省略为 。。。
+
+改变元素大小：
+	resize:both;可拖拽
+文本对齐：
+	text-align:left / right /justify;
+	justify:两端对齐
+文本换行：
+	word-wrap:break-word;可以在容器宽度不够时折断单词换到下一行

@@ -1,0 +1,17 @@
+@font-face规则
+	@font-face{
+		font-family: name;
+		src: local('fontname'),url('/path/filename.otf') format('opentype');
+	}
+
+万无一失的语法
+	@font-face{
+		font-family:'GentiumBookBasicRegular';
+		src:url('GenBkBasR.eot');
+		src:local(' '),
+		url('GenBkBasR.woff') format('woff'),
+		url('GenBkBasR.ttf') format('truetype'),
+		url('GenBkBasR.woff') format('svg'),
+		
+	}
+	

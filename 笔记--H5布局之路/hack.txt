@@ -1,0 +1,64 @@
+hack：可以针对某种浏览器进行样式的设置，能够标识出不同浏览器的书写方式
+
+	1、常用IE hack：
+		
+		_width: 400px;		IE6
+		+width: 400px;		IE6,IE7
+		*width: 400px;		IE6,IE7
+		width: 200px/9;		IE6~IE10
+		width: 200px/0;		IE8~IE11
+
+	2、IE 条件注释
+		
+		<!-- [if  属性  IE  版本号] >
+			具体HTML代码
+		<![endif] -->
+		
+		属性：
+			gt：greater than  选择条件以上的版本，不包括条件版本
+			lt：less than     选择条件以下的版本，不包括条件版本
+			gte：greater than or equal  	选择条件以上的版本，包括条件版本
+			lte：less than or equal  	选择条件以下的版本，包括条件版本
+			!：选择条件版本以外的所有版本，无论高低
+			
+			不书写属性则意味着选择条件版本
+			
+		实例：
+			<!--[if IE 8]>
+				<link href="css/a.css" rel="stylesheet">
+			<![endif]-->
+			
+			<!--[if gt IE 8] >
+				<link href="css/b.css" rel="stylesheet">
+			<![endif] -->
+			
+浏览器内核
+	
+	1、Rendering Engine 渲染引擎，也叫作浏览器内核。
+	
+	2、渲染引擎的作用：将代码变为网页。
+	
+	3、不同的浏览器内核对网页编写语法的解释也有所不同，因此同一网页在不同内核的浏览器里渲染的效果也可能不同。
+	
+	
+	4、常见的浏览器内核：
+	
+			IE				Trident
+			Chrome			Blink				旧版本内核为WebKit
+			Safari			WebKit
+			FireFox			Gecko
+			Opera			Webkit				旧版本内核为presto
+			
+	5、360浏览器是双内核浏览器，极速模式使用 WebKit 内核，兼容模式使用 Trident 内核。
+	
+	6、WebKit内核是世界上最快的内核，同时支持了诸多的网页新标准。
+	
+	7、常见浏览器内核前缀：
+	
+			Trident 		-ms
+			Blink			-webkit
+			WebKit			-webkit
+			Geoko			-moz
+			Presto			-o
+			
+	8、并不是所有的样式都可以使用内核前缀。

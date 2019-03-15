@@ -1,0 +1,232 @@
+
+    实战中的 microblog 项目，并不适合在产品环境下使用。它有几个重大缺陷：
+
+        1、不支持故障恢复：
+            当程序出现错误时，整个进程就会结束，需要重新在终端通过npm start启动服务器。这一点在产品环境下就是严重的问题，因为一旦用户访问时触发了程序中的某个隐含的bug，整个服务器就崩溃了，将无法继续为所有用户提供服务。在部署nodejs应用的时候一定要考虑到故障恢复，提高系统的可靠性。
+
+        2、没有日志：
+            对于开发者来说，日志，尤其是错误日志是极其重要的，经常查看它可以发现测试时没有注意到的程序错误。
+            然而这个服务器运行时没有产生任何日志，包括访问日志和错误日志，所以有必要实现它的日志功能。
+
+        3、无法利用多核提高性能：
+            由于Nodejs是单线程的，一个进程只能利用一个CPU。当请求大量到来时，单线程就成为了提高吞吐量的瓶颈。目前的多核时代，只能利用一个核心所带来的浪费是十分严重的，我们需要使用多进程来提高系统的性能。
+
+        4、独占端口：
+            有时候为了充分利用服务器的资源，我们会在同一个服务器上建立多个网站，而且这些网站可能有的是PHP、Rails、Nodejs等。不能每个端口都独占80端口，所以我们有必要通过反向代理来实现基于域名的端口共享。
+
+        5、需要手动启动：
+            我们的每次服务器启动都是通过在命令行中直接键入命令来实现的，但在产品环境中，特别是服务器重启后，全部靠手动启动是不现实的。因此，我们应该制作一个自动启动服务器的脚本，并且通过该脚本可以实现停止服务器等功能。
+
+        6、开发模式和产品模式：
+            开发模式：用于调试
+            产品模式：用于部署
+            使用产品模式运行：设置NODE_ENV环境变量，通过 NODE_ENV=production node app.js 命令运行服务器，如果是通过 npm start运行程序，则在package.json中更改 scripts -》start 的值， 在前面加上 NODE_ENV=production
+
+①实现日志功能
+    实现访问日志和错误日志功能：
+        访问日志：记录用户对服务器的每个请求，包括客户端IP地址、访问时间、访问路径、服务器响应、客户端代理字符串
+        错误日志：记录程序发生错误时的信息，在开发环境中我们直接在终端查看即可，而在产品模式中，需要写入错误日志文件
+
+    express提供了一个访问日志中间件(也就是使用app.use()使用的中间件)，只需指定 stream 参数为一个输出流即可访问日志写入文件：
+        var fs = require('fs');
+        var morgan = require('morgan');
+        var accessLogfile = fs.createWriteStream('access.log',{flags:'a'});
+        var errorLogfile = fs.createWriteStream('error.log',{flags:'a'});
+
+        //访问日志,放在程序最开头
+        //app.use(express.logger({stream: accessLogfile}));   //这时express3版本
+        app.use(morgan('combined', { stream: accessLogfile })); //express4版本
+        //错误日志，express3以后使用app.use，传入的函数第一个参数为err，一定要放在路径控制下面，如果放在上面，一定是先执行这个函数，可能此时还没有错误发生，错误发生在路径控制那里，所以放在下
+        app.use(function(err, req, res, next){
+            var meta = '[' + new Date() +']' + req.url + '\n' + err.stack + '\n';
+            errorLogfile.write(meta);
+            next();
+        });
+
+    以前的中间件是 express.logger
+    现在的中间件需要 install，并且更名为 morgan
+
+    通过 app.get('env') 判断为生产环境还是开发环境
+        //开发环境
+        if ('development' == app.get('env')) {}
+        //生产环境
+        if ('production' == app.get('env')) {}
+
+②使用cluster模块，充分利用CPU资源
+
+    cluster的功能：生成与当前进程相同的子进程，并允许父进程和子进程之间共享端口。相当于创建多线程，类似于JS中的worker，但是这里的子进程数目和CPU有关
+
+    Nodejs的另一个核心模块child_process也提供了相似的进程生成功能，但最大的区别在于cluster允许跨进程端口复用。
+
+    为了在外部模块调用app.js，首先需要禁止服务器自动启动。
+
+    if(!module.parent) {
+        app.listen(3000);
+        console.log('express server listening on port %d in %s mode', app.address().port, app.setting.env);
+    }
+
+    这个语句的功能是判断当前模块是不是由其他模块调用的(如果是由其他模块调用的，module.parent === true)， 如果不是，说明它是直接启动的，此时启动调试服务器；如果是,则不启动服务器。
+    经过这样的修改，以后直接调用node app.js服务器会会直接运行，但是在其他模块中调用require('./app'),则不会自动启动，需要显式再次调用listener()函数。
+
+    通过cluster调用app.js：
+        //cluter.js
+        var cluster = require('cluster');
+        var os = require('os');   //操作系统模块
+
+        //获取CPU的数量
+        var numCPUs = os.cpus().length;
+
+        var workers = {};
+        //如果是主进程
+        if(cluster.isMaster){
+            cluster.on('death', function(worker){
+                //当一个工作进程结束时，重启工作进程
+
+                delete workers[worker.pid];
+                worker = cluster.fork();
+                workers[worker.pid] = worker;
+            });
+
+            //初始开启与CPU数量相同的工作进程
+            for(var i = 0; i < numCPUs; i++){
+                var worker = cluster.fork();
+                workers[worker.pid] = worker;
+            }
+        }else{  //如果不是主进程，也就是分支进程
+            var app = require('./app');
+            app.listen(3000);
+        }
+
+        //主进程被终止时，关闭所有工作进程
+        process.on('SIGTERM',function(){
+            for( var pid in workers){
+                process.kill(pid);
+            }
+            process.exit(0);
+        })
+
+    cluter.js的功能是创建与CPU核心个数相同的服务器进程，以确保充分利用多核CPU的资源。
+
+    主进程生成若干个工作进程，并监听工作进程结束事件，当工作进程结束时，重新启动一个工作进程。
+
+    分支进程产生时会自顶向下重新执行当前程序，并通过分支判断进入工作进程分支，在其中读取模块并启动服务器。
+
+    通过cluster启动的工作进程可以直接实现端口复用，因此所有工作进程只需监听同一端口。
+
+    当主进程终止时，还要主动关闭所有工作进程。
+
+    主进程并不运行服务器，只是用于创建并管理与CPU个数相同的分支进程，当这个主进程结束时，分支进程也全部结束，主进程也控制所有分支进程的启动。
+
+③编写启动脚本
+    创建文件microblog
+        //microblog
+        #! /bin/bash
+        NODE_ENV=production
+        DAEMON="sudo node /home/bwhite/Desktop/node-dome/nodejs实战/microblog/cluster.js"
+        NAME=Microblog
+        DESC=Microblog
+        PIDFILE="/home/bwhite/Desktop/node-dome/nodejs实战/microblog/bin/microblog.pid"
+        MY_NOHUP="/etc/init.d/my_nohup.log"
+
+        case "$1" in
+            start)
+                sudo echo "Starting $DESC:"
+        		sudo nohup $DAEMON > $MY_NOHUP  &  #（符号＆使程序在后台运行）
+                sudo echo $! > $PIDFILE
+                    ;;
+            stop)
+                sudo echo "Stopping $DESC: "
+                	PID=$(sudo cat $PIDFILE)
+        			sudo echo $PID
+                sudo kill -9 $PID
+        		sudo rm $PIDFILE
+        			NPID=$(sudo ps -ef | grep "$DAEMON" | grep -v "$DAEMON" | awk "{print $2}") #获取某个命令运行的进程号
+        			sudo echo $NPID
+        		sudo kill -9 $NPID
+                    ;;
+        esac
+
+        exit 0
+
+
+    在该目录下执行 sudo chmod +x microblog，赋予microblog可执行权限        //然后就可以使用 ./microblog start 运行这个可执行程序
+    在该目录下执行 sudo cp  microblog /etc/init.d/ 将microblog复制到 /etc/init.d/ 下
+    控制台执行 sudo update-rc.d microblog defaults 99  将脚本添加到ubantu的初始化执行队列中     //99是即启动的顺序，依赖多的项目就放在后面
+
+    同样的，要想让程序正常运行，就必须让mongodb运行在程序之前，所以：
+        //mongod
+        #! /bin/bash
+        DAEMON="/usr/local/mongodb/bin/mongod -dbpath /data/db"
+        NAME=mongodb
+        DESC=mongodb
+        PIDFILE="/usr/local/mongodb/mongodbpid"
+
+        case "$1" in
+            start)
+                echo "Starting $DESC:"
+                    nohup $DAEMON > /dev/null &
+                echo $! > $PIDFILE
+                    ;;
+            stop)
+                echo "Stopping $DESC: "
+                    PID=$(cat $PIDFILE)
+                kill $PID
+                    rm $PIDFILE
+                    ;;
+        esac
+
+        exit 0
+
+    sudo chmod +x mongod
+    sudo cp  mongod /etc/init.d/
+    sudo update-rc.d mongod defaults 80
+
+    卸载启动脚本的方法：
+    cd /etc/init.d
+    sudo update-rc.d -f microblog  remove
+    sudo update-rc.d -f mongod  remove
+
+
+④共享80端口
+    很多时候一个服务器上运行着不止一个网站，尤其是还有用其他语言写的网站，不可能都去占用80端口。此时，就需要虚拟主机了。
+
+    虚拟主机，就是让多个网站共享使用同一服务器同一IP地址，通过域名、端口号的不同来划分请求。
+
+    主流的HTTP服务器都提供了虚拟主机支持，如Nginx、Apache、II等。
+
+    Apache虚拟主机配置：https://www.cnblogs.com/lucky-man/p/6207851.html
+
+    在Nginx中设置一个虚拟主机，配置文件：
+        server{
+            listen: 80;         //监听80端口
+            server_name  microblog.com  //监听microblog.com域名
+
+            location / {        //定位到 http://localhost:3000
+                proxy_pass http://localhost:3000
+            }
+        }
+        //也就是将 microblog.com:80 定位到 http://localhost:3000
+        //同时还需要修改 hosts文件 ，在 /etc/下，是隐藏文件；  Windows下是 C:/windows/System32/drivers/
+    添加虚拟主机后，还可以在Nginx配置文件中添加访问静态文件的规则，然后删去 app.js中的 静态服务配置，让Nginx来处理静态文件，减少反向代理以及Nodejs的开销。
+
+⑤Nodejs不是银弹
+    Nodejs不适合做什么？
+        1、不适合计算密集型的程序
+            在不适用 cluster 的情况下，它是单线程的、非阻塞IO、基于事件循环的。
+            基于它的这些特点，它在执行时对CPU的利用率理论达到100%，它做的事情就是：计算的过程中等待异步IO的返回-调用事件队列中的函数-再计算。。。
+            如果计算非常密集，那么在某一步计算上消耗的时间就会很多，比如，在某个事件的回调函数中要进行非常密集的计算，占用CPU200毫秒，那么，事件队列中的所有请求都要等待200毫秒。
+            为了提高响应速度，你为一个办法就是把这个密集型计算拆分成若干逻辑，这就会带来额外的复杂性。而且，系统的总吞吐量和总响应延迟也不会降低，只是调度稍微公平。
+
+            不过好在WEB服务器中，很少会有计算密集型的部分。。。
+
+        2、不适合单用户多任务型的应用
+            也就是不适合有锁情况的业务，Nodejs的多进程根本没有锁，号称‘不会死锁’，Nodejs的多进程往往是在执行同一任务，通过多进程利用多处理器的资源，但遇到多进程相互协作时，就很捉襟见肘，比如售票系统等实时多线程协作系统等。
+
+        3、不适合逻辑十分复杂的事务
+            如果将一个线性的有顺序的事件流，使用Nodejs实现，那么逻辑的复杂程度可能会达到无法维护的地步，因为Nodejs本身就是异步和事件的。
+            一个复杂的线性逻辑要拆为非线性的异步逻辑。。。头疼
+
+            Nodejs更善于处理那些逻辑简单但访问频繁的任务，而不适合完成逻辑复杂的工作。
+
+
+        Nodejs适合：表单提交、长连接、请求次数多之类的事情

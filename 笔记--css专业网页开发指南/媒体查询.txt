@@ -1,0 +1,57 @@
+语法：
+	1、<link  href="****.css"  rel="stylesheet"  media="(only) screen and ( max-device-width:320px) and (orientation:portrait)">
+
+	2、@media (only) screen and ( max-device-width:320px) and (orientation:portrait){
+		h1{
+			background:red;
+		}
+	}
+	
+	3、@import url(****.css)   (only) screen and ( max-device-width:320px) and (orientation:portrait) 
+
+	注：only是可选的，对不支持该语法的浏览器隐藏规则；也可用not  ，如果浏览器不满足设置的参数，否定媒体查询
+
+	括号里面的属性值：
+	     可选:
+
+
+
+	             浏览器宽高度：
+
+		width:600px;  当宽度是600的时候
+		height:600px; 当高度是600的时候	
+		max-width:480px;  最大宽度	min-width:480px;最小宽度
+		max-height:480px;  最大高度	min-height:480px;最小高度
+
+
+	             设备宽高度：
+
+		device-width:1024px;  当设备屏幕是1024时
+		max-device-width:320px;   当设备最大宽度是320 时   //IOS和android设备会从四个屏幕侧边中较短的一对去测量device-width，比如320*480  不管是纵向还是横向他的宽度都是320
+		min-device-width:320px;
+		device-height:.......
+		max-device-height:....
+		min-device-height:.....
+
+
+	             浏览器宽高比与设备宽高比：
+：
+		aspect-ratio:16/10 (16/9 ，15/10)        // 浏览器宽高比   一般就是16/10   15/10  16/9
+		device-aspect-radio:16/10 (16/9 ，15/10)	//设备的宽高比   
+
+
+	             像素比：
+
+		device-pixel-radio:1.5   //设备像素比
+		要加前缀    -webkit-    -moz-
+		max--moz-device-pixel-radio:1.5
+		min--moz-device-pixel-radio:1.5
+		
+
+	注意：	使用媒体查询时应该先制作一个移动的基本样式表，
+		然后再为桌面用户制作一个较大资源的样式表，对桌面的样式表使用媒体查询
+		这里还要注意IE9以前不支持媒体查询，所以要为IE9以前的版本写一行代码，把桌面的样式表放进去
+		<!--[if lt IE 9]>
+			<link href="desktop.css" rel="stylesheet" media="screen">  //这里说的IE9之前不支持媒体查询是指不能识别and后面括号里面的部分
+		<![endif]-->
+		

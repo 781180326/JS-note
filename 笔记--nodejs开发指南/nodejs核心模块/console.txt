@@ -1,0 +1,40 @@
+1、console.log(): 向标准输出流打印字符并以换行符结束
+
+    接受若干个参数：
+      没有参数：只打印一个换行
+      一个参数：输出这个参数的字符串形式
+      多个参数：类似于C语言printf()命令的格式输出
+
+    eg:
+      console,log('hello world');
+      console.log('byvoid%diovyb');
+      console.log('byvoid%diovyb', 1991);
+
+      //hello word
+      //byvoid%diovyb
+      //byvoid1991iovyb
+
+2、console.error()：向标准错误流输出
+
+      console.error()
+
+      //undefined
+
+3、console.trace()：向标准错误流输出当前的调用栈
+
+      console.trace()
+
+      //Trace
+      //  at repl:1:9
+      //  at Script.runInThisContext (vm.js:91:20)
+      //  at REPLServer.defaultEval (repl.js:329:29)
+      //  at bound (domain.js:396:14)
+      //  at REPLServer.runBound [as eval] (domain.js:409:12)
+      //  at REPLServer.onLine (repl.js:625:10)
+      //  at REPLServer.emit (events.js:187:15)
+      //  at REPLServer.EventEmitter.emit (domain.js:442:20)
+      //  at REPLServer.Interface._onLine (readline.js:290:10)
+      //  at REPLServer.Interface._line (readline.js:638:8)
+      //undefined
+
+当程序出现错误时，会在错误位置调用 console.trace() 打印当前调用栈

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>HTML5布局之路</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
+	<meta name="author" content="bwhite">
+	<meta name="copyright" content="bwhite">
+	<meta http-equiv="Content-Language" content="zh-CN">
+	<meta name="shortcut icon" href="....ico">
+	<link rel="stylesheet" type="text/css" href="./reset.css">
+	<style type="text/css">
+		a{
+			text-decoration: none;
+			color: #4a5d70;
+			outline: none;
+		}
+		.left{float: left;}
+		.right{float: right;}
+		.clearfix:after{
+			content: '\200B';
+			height: 0;
+			display: block;
+			clear: both;
+		}
+		body{
+			background: rgba(120,120,120,.1);
+		}
+		
+		.header{
+			min-width: 990px;
+			border-top:7px solid #ccc;
+		}
+		.header_con{
+			width: 990px;
+			height: 109px;
+			margin: 0 auto;
+		}
+		.header_con h1{
+			width: 500px;
+			height: 100%;
+			line-height: 109px;
+		}
+		.header_con h1 a{
+			display: block;
+			height: 100%;
+			padding-left: 93px;
+			font-size: 32px;
+			background: url() 0 0 no-repeat;
+		}
+		.header_con span{
+			width: 92px;
+			height: 100%;
+			line-height: 109px;
+			background: url() center center no-repeat;
+			background-size: 100% 100%;
+		}
+
+		.nav{
+			width: 970px;
+			height: 44px;
+			margin: 0 auto 20px;
+		}
+		.nav a{
+			float: left;
+			width: 16.66%;
+			height: 100%;
+			text-align: center;
+			line-height: 44px;
+			color:#49a7ca;
+		}
+		.nav a:hover{
+			color: skyblue;
+		}
+
+		.banner{
+			position: relative;
+			width: 970px;
+			height: 260px;
+			margin: 0 auto 20px;
+			overflow: hidden;
+		}
+		.banner .pics{
+			width: 500%;
+			height: 260px;
+		}
+		.banner .pics a{
+			float: left;
+			width: 20%;
+			height: 100%;
+		}
+		.banner .pics a img{
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+		.banner .prev, .banner .next{
+			position: absolute;
+			top: 50%;
+			width: 40px;
+			height: 40px;
+			margin-top: -20px;
+			border-radius: 50%;
+			background: #ccc;
+			text-align: center;
+			line-height: 40px;
+			cursor: pointer;
+		}
+		.banner .prev:hover, .banner .next:hover{
+			background: yellow;
+		}
+		.banner .prev{
+			left: 20px;
+		}
+		.banner .next{
+			right: 20px;
+		}
+		.banner ul{
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			right: 0;
+			width: 14%;
+			height: 20px;
+			margin-left: -7%;
+		}
+		.banner ul li{
+			float: left;
+			width: 18%;
+			height: 100%;
+			margin: 0 1%;
+			border-radius: 50%;
+			background: #fff;
+			cursor: pointer;
+		}
+		.banner ul li:hover{
+			background: yellow;
+		}
+		.banner ul .active{
+			background: yellow;
+		}
+
+		.content{
+			width: 974px;
+			margin: 0 auto 30px;
+		}
+		.content .left{
+			width: 648px;
+			height: 774px;
+		}
+		.content .right{
+			width: 262px;
+			height: 723px;
+			padding-top: 51px;
+		}
+		.content h3{
+			height: 24px;
+			margin-left: 15px;
+			line-height: 24px;
+			font-size: 18px;
+			color: #555;
+		}
+		.content .news{
+			overflow: hidden;
+		}
+		.content .news dl{
+			height: 219px;
+			padding-top: 30px;
+			border-top: 1px solid #ccc;
+			margin-top: -1px;
+		}
+		.content .news dt{
+			float: right;
+			width: 170px;
+			height: 170px;
+			padding: 0 20px;
+		}
+		.content .news dt a{
+			display: block;
+			height: 100%;
+		}
+		.content .news dt img{
+			display: block;
+			width: 164px;
+			height: 164px;
+			border: 3px solid #4a5d70;;
+			border-radius: 50%;
+		}
+		.content .news dd{
+			float: left;
+			width: 405px;
+			margin-left: 15px;
+		}
+		.content .news h2{
+			height: 40px;
+		}
+		.content .news h2 a{
+			display: block;
+			height: 100%;
+			line-height: 40px;
+			font-size: 24px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: keep-all;
+			white-space: nowrap;
+		}
+		.content .news div{
+			height: 20px;
+			font-size: 12px;
+			color: #b3b2b2;
+		}
+		.content .news div span{
+			line-height: 20px;
+			margin-right: 20px;
+		}
+		.content .news div a{
+			float: left;
+			height: 100%;
+			background:#ccc url() 0 0 no-repeat;
+			font-size: 14px;
+		}
+		.content .news p{
+			height: 80px;
+			margin: 9px 0;
+			line-height: 20px;
+			font-size: 14px;
+			color: #666;
+			overflow: hidden;
+		}
+		.content .right .video{
+			display: block;
+			height: 135px;
+			margin-bottom: 2px;
+		}
+		.content .right .frendlink a{
+			display: block;
+			width: 260px;
+			height: 79px;
+			margin-top: 14px;
+			border: 1px solid #dadada;
+			text-align: center;
+			line-height: 79px;
+			font-size: 18px;
+
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: keep-all;
+			white-space: nowrap;
+		}
+
+		.tabcard{
+			min-width: 990px;
+			background: #ccc;
+		}
+		.tabcard_con{
+			width: 990px;
+			margin: 0 auto;
+			overflow: hidden;
+		}
+		.tabcard_con .tabtit{
+			height: 42px;
+		}
+		.tabcard_con .list{
+			width: 300%;
+			height: 390px;
+		}
+		.tabcard_con .tabtit span{
+			float: left;
+			width: 170px;
+			height: 42px;
+			border-radius: 0 0 4px 4px;
+			background: #fff;
+			line-height: 42px;
+			text-align: center;
+			cursor: pointer;
+		}
+		.tabcard_con .tabtit .select{
+			background: #f4f4f4;
+		}
+		.tabcard_con .list ul{
+			float: left;
+			width: 33.33%;
+			height: 100%;
+		}
+		.tabcard_con .list ul li{
+			float: left;
+			width: 30%;
+			height: 100%;
+			margin-right: 5%;
+		}
+		.tabcard_con .list ul li:last-child{
+			margin: 0;
+		}
+		.tabcard_con .list ul li h3{
+			height: 20px;
+			margin-top: 20px;
+			font-size: 14px;
+			text-align: center;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: keep-all;
+			white-space: nowrap;
+		}
+		.tabcard_con .list ul li h3 a{
+			line-height: 20px;
+		}
+		.tabcard_con .list ul li img{
+			display: block;
+			height: 150px;
+			padding: 15px;
+			margin-bottom: 5px;
+			background: #fff;
+			border-radius: 4px 4px 0 0;
+		}
+		.tabcard_con .list ul li div{
+			padding: 20px;
+			background: #fff;
+			font-size: 12px;
+			line-height: 20px;
+			word-break: break-all;
+			border-radius: 0 0 4px 4px;
+		}
+		.tabcard_con .list ul li div p{
+			overflow: hidden;
+			height: 60px;
+			margin-bottom: 9px;
+			color: #666;
+		}
+		
+
+		.footer{
+			min-width: 990px;
+			background: skyblue;
+		}
+		.footer_con{
+			width: 990px;
+			height: 165px;
+			margin: 0 auto;
+			text-align: center;
+		}
+		.footer_con, .footer_con a{
+			color: #fff;
+		}
+		.footer_con .copyright{
+			padding-top: 32px;
+			margin-bottom: 16px;
+			font-size: 14px;
+			font-weight: bold;
+		}
+		.footer_con p{
+			font-size: 12px;
+			line-height: 20px;
+		}
+		.footer_con p a{
+			padding: 0 7px;
+			border-left: 1px solid #fff;
+		}
+		.footer_con p a:first-child{
+			border: none;
+		}
+
+		/*.header_con{background:red;}
+		.nav{background: blue;}*/
+		/*.banner{background: orange;}*/
+		/*.content .left{background: yellow;}
+		.content .right{background: red;}*/
+		/*.tabcard_con .tabtit{background: blue;}*/
+		/*.tabcard_con .list{background: yellow;}*/
+		/*.footer_con{background: skyblue;}*/
+	</style>
+</head>
+<body>
+	<div class="header">
+		<header id="header_con" class="header_con">
+			<h1 class="left"><a href="" title="HTML5布局之路">HTML5布局之路--练习版</a></h1>
+			<span class="right"></span>
+		</header>
+	</div>
+
+	<nav id="nav" class="nav">
+		<a href="" title="">学习攻略</a>
+		<a href="" title="">我的收藏</a>
+		<a href="" title="">在线资源</a>
+		<a href="" title="">资源下载</a>
+		<a href="" title="">我的文章</a>
+		<a href="" title="">问题讨论</a>
+	</nav>
+
+	<section id="banner" class="banner">
+		<div class="pics clearfix">
+			<a href="" title=""><img src="" alt="1111"></a>
+			<a href="" title=""><img src="" alt="2222"></a>
+			<a href="" title=""><img src="" alt="3333"></a>
+			<a href="" title=""><img src="" alt="4444"></a>
+			<a href="" title=""><img src="" alt="5555"></a>
+		</div>
+		<span id="prev" class="prev"><</span>
+		<span id="next" class="next">></span>
+		<ul>
+			<li class="active"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</section>
+	
+
+	<section id="content" class="content clearfix">
+		<article class="left">
+			<h3>最新文章</h3>
+			<div class="news">
+				<dl>
+					<dt>
+						<a href="" title="">
+							<img src="" alt="暂无图片">
+						</a>
+					</dt>
+					<dd>
+						<h2><a href="" title="斐波拉契数列">经典的斐波拉契数列与anguments...</a></h2>
+						<div>
+							<span>javascript</span>
+							<span>2018-01-01</span>
+						</div>
+						<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+						<div><a href="" title="">查看详情</a></div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<a href="" title="">
+							<img src="" alt="暂无图片">
+						</a>
+					</dt>
+					<dd>
+						<h2><a href="" title="斐波拉契数列">经典的斐波拉契数列与anguments...</a></h2>
+						<div>
+							<span>javascript</span>
+							<span>2018-01-01</span>
+						</div>
+						<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+						<div><a href="" title="">查看详情</a></div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<a href="" title="">
+							<img src="" alt="暂无图片">
+						</a>
+					</dt>
+					<dd>
+						<h2><a href="" title="斐波拉契数列">经典的斐波拉契数列与anguments...</a></h2>
+						<div>
+							<span>javascript</span>
+							<span>2018-01-01</span>
+						</div>
+						<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+						<div><a href="" title="">查看详情</a></div>
+					</dd>
+				</dl>
+			</div>
+		</article>
+		<aside class="right">
+			<a class="video" href="" title=""></a>
+			<div class="frendlink">
+				<a href="" title="优秀的HTML5网站链接">优秀的HTML5网站链接</a>
+				<a href="" title="优秀的HTML5网站链接">优秀的HTML5网站链接</a>
+				<a href="" title="优秀的HTML5网站链接">优秀的HTML5网站链接</a>
+				<a href="" title="优秀的HTML5网站链接">优秀的HTML5网站链接</a>
+				<a href="" title="优秀的HTML5网站链接">优秀的HTML5网站链接</a>
+				<a href="" title="优秀的HTML5网站链接">优秀的HTML5网站链接</a>
+			</div>
+		</aside>
+	</section>
+
+	<div class="tabcard">
+		<section id="tabcard_con" class="tabcard_con">
+			<div class="tabtit">
+				<span class="select">最新攻略</span>
+				<span>移动端开发攻略</span>
+				<span>开发工具攻略</span>
+			</div>
+			<div class="list clearfix">
+				<ul>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+				</ul>
+				<ul>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+				</ul>
+				<ul>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+					<li>
+						<h3><a href="" title="">使用Git多人协作，完成项目开发</a></h3>
+						<img src="" alt="IBM">
+						<div>
+							<p>HTML5学堂：经典的斐波拉契数列与anguments提到的斐波拉契数列，很多人还不清楚，但是如果提到兔子繁殖这个问题，相信学过计算机语言的人们会立刻亲切起来。</p>
+							<a href="" title="">查看详情</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</section>
+	</div>
+	<div class="footer">
+		<footer id="footer_con" class="footer_con">
+			<div class="copyright">HTML5学堂(<a href="" title="HTML5学堂">www.h5course.com</a>)©2016 版权所有</div>
+			<p>
+				<a href="" title="">郑重声明</a>
+				<a href="" title="">关于HTML5学堂</a>
+				<a href="" title="">主创团队</a>
+				<a href="" title="">微信公众号</a>
+				<a href="" title="">学堂微博</a>
+				<a href="" title="">前端人才群</a>
+				<a href="" title="">学堂技术交流群</a>
+			</p>
+			<p>备案号：XXXXXXXXXX号</p>
+		</footer>
+	</div>
+
+</body>
+</html>

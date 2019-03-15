@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="format-detection" content="email=no">
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<meta name="author" content="bwhite">
+	<meta name="copyright" content="bwhite">
+	<meta http-equiv="Content-Language" content="zh-CN">
+	<meta name="shortcut icon" href="....ico">
+	<link rel="stylesheet" type="text/css" href="./reset.css">
+	<style type="text/css">
+		html{
+			font-size: 42px;
+			font-family: 'Microsoft YaHei', sans-serif, Arial;
+			color: #303030;
+			background: #fff;
+		}
+		a{
+			text-decoration: none;
+			color: #666;
+			outline: none;
+			-webkit-tap-highlight-color: rgba(255,0,0,0);
+		}
+		input:focus{
+			-webkit-tap-highlight-color: rgba(0,0,0,0);
+			-webkit-user-modify: read-write-plaintext-only;
+		}
+		input[type="button"], input[type="submit"], input[type="reset"]{
+			-webkit-appearance: none;
+		}
+		input::-ms-clear{
+			display: none;
+		}
+		.wrap{
+			position: relative;
+			width: 100%;
+			max-width: 1080px;
+			margin: 0 auto;
+		}
+		.header{
+			position: fixed;
+			top: 0;
+			z-index: 9;
+			width: 100%;
+			max-width: 1080px;
+			height: 7.86rem;
+			box-shadow: 0 4px #666;
+		}
+		.box{
+			padding-top: 7.86rem;
+		}
+		.hots{
+			padding: 0 3.7%;
+			height: 21.9rem;
+		}
+		.hots>div{
+			height: 2.9rem;
+			padding: 1rem 0 0 10.5%;
+			font-size: 1.43rem;
+			color: #f62828;
+			line-height: 2.9rem;
+			background-size: 1.31rem 1.43rem;
+		}
+		.hots li{
+			border-bottom: 0.14rem dotted #666;
+		}
+		.hots li:last-child{
+			border-bottom: 0.14rem dotted #fff;
+		}
+		.hots li a{
+			position: relative;
+			display: block;
+			height: 100%;
+			padding: 0 15.6% 0 10.8%;
+		}
+		.hots li a:before{
+			content: '\200B';
+			position: absolute;
+			top: 3.86rem;
+			left: 2.8%;
+			width: 3%;
+			height: 0.71rem;
+			background: #666;
+			border-radius: 50%;
+		}
+		.hots li a:after{
+			content: '\200B';
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 15.6%;
+			height: 100%;
+			background-size: 0.6rem 0.95rem;
+		}
+		.hots h2{
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: keep-all;
+			white-space: nowrap;
+			height: 2.67rem;
+			padding-top: 0.29rem;
+			font-size: 1.33rem;
+			font-weight: bold;
+			line-height: 2.67rem;
+		}
+		.hots p{
+			overflow: hidden;
+			height: 2.38rem;
+			line-height: 1.19rem;
+		}
+		.hots li div{
+			height: 1rem;
+			margin: 1rem 0 1.38rem;
+			padding-left: 9.1%;
+			line-height: 1rem;
+			background-size: 1rem 1rem;
+		}
+
+		.model{
+			padding: 0 3.7%;
+			height: 34.76rem;
+		}
+		.footer{
+			height: 3.45rem;
+		}
+		
+
+		/*.header{background: red;}
+		.hots{background: green;}
+		.model:nth-of-type(1){background: skyblue;}
+		.model:nth-of-type(2){background: blue;}
+		.footer{background: orange;}*/
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<header class="header"></header>
+		<div class="box">
+			<div class="hots">
+				<div>热门与推荐</div>
+				<ul>
+					<li>
+						<a href="" title="">
+							<h2>jQuery入门</h2>
+							<p>jQuery对于开发者来说，是一个很好用的插件，需要去了解这些功能。</p>
+							<div>阅读量 125</div>
+						</a>
+					</li>
+					<li>
+						<a href="" title="">
+							<h2>jQuery入门</h2>
+							<p>jQuery对于开发者来说，是一个很好用的插件，需要去了解这些功能。</p>
+							<div>阅读量 125</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<section class="model"></section>
+			<section class="model"></section>
+			<footer class="footer"></footer>
+		</div>
+	</div>
+	<script>
+		var html = document.querySelector('html');
+		document.addEventListener('DOMContentLoaded', loaded,false);
+		
+		function loaded(){
+			infinite();
+			window.addEventListener('resize', infinite, false);
+		}
+
+		function infinite(){
+			var htmlWidth = document.body.clientWidth;
+			if( htmlWidth >= 1080 ) {
+				html.style.fontSize = '42px';
+			} else{
+				html.style.fontSize = 42/1080*htmlWidth + 'px';
+			}
+		}
+	</script>
+</body>
+</html>
